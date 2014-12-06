@@ -15,26 +15,41 @@ Mongo.MongoClient.connect(dbConnectionUrl, {'server': {'auto_reconnect': true}},
   }
 });
 
+
+var swaggerOptions = {
+	    basePath: 'http://localhost:3005'
+	},
+	server;
+
 function init(){
 
 	Routes.init(db);
-	
 
-	// Create a server with a host and port
-	var server = new Hapi.Server('localhost', 3005);
+	server = Hapi.createServer('localhost', 3005);
 
-	// Add the route
-	server.route(Routes.routes);
-	    server.views({
-	                    path: 'templates',
-	                    engines: { html: require('handlebars') },
-	                    partialsPath: './templates/withPartials',
-	                    helpersPath: './templates/helpers',
-	                    isCached: false
-	                })
+  	// adds swagger self documentation plugin
+    server.pack.register([{
+            plugin: require('hapi-swagger'), 
+            options: swaggerOptions
+        }], function (err) {
+        if (err) {
+            console.error(err);
+        }else{
 
+            // hapi server settings
+            server.route(Routes.routes);
+            server.views({
+                    path: 'templates',
+                    engines: { html: require('handlebars') },
+                    partialsPath: './templates/withPartials',
+                    helpersPath: './templates/helpers',
+                    isCached: false
+                })
 
-	// Start the server
-	server.start();
+            server.start(function(){
+                console.info('Server started at ' + server.info.uri);
+            });
+        }
+    });
 
 }
