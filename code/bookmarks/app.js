@@ -6,7 +6,8 @@ var Hapi            = require('hapi'),
     Auth            = require('./lib/auth.js').Auth;
 
 
-var auth,
+var serverMode = (process.env.NODE_ENV) ? process.env.NODE_ENV : 'development',
+    auth,
     server,
     protocol = 'http://',
     host = (process.env.HOST)? process.env.HOST : 'localhost',

@@ -149,7 +149,16 @@ routes = [{
 				}
 			},
 			tags: ['api', 'public'],
-			validate: { 
+			auth: {
+                strategies:['bearer']
+            },
+			validate: {
+				headers: Joi.object({
+						Authorization: Joi.string()
+								.default('Bearer ')
+								.description('bearer token takes "Bearer " and token'),
+							}).unknown(),
+
 				payload: {
 					url: Joi.string()
 						.required()
@@ -183,7 +192,16 @@ routes = [{
 				}
 			},
 			tags: ['api', 'public'],
+			auth: {
+                strategies:['bearer']
+            },
 			validate: {
+				headers: Joi.object({
+						Authorization: Joi.string()
+								.default('Bearer ')
+								.description('bearer token takes "Bearer " and token'),
+							}).unknown(),
+
 				params: {
 					id: Joi.string()
 						.required()
@@ -221,7 +239,16 @@ routes = [{
 				}
 			},
 			tags: ['api', 'public'],
-			validate: { 
+			auth: {
+                strategies:['bearer']
+            },
+			validate: {
+				headers: Joi.object({
+						Authorization: Joi.string()
+								.default('Bearer ')
+								.description('bearer token takes "Bearer " and token'),
+							}).unknown(),
+
 				params: {
 					id: Joi.string()
 						.required()
@@ -242,7 +269,16 @@ routes = [{
 				}
 			},
 			tags: ['api', 'private'],
-			validate: { 
+			auth: {
+                strategies:['bearer']
+            },
+			validate: {
+				headers: Joi.object({
+						Authorization: Joi.string()
+								.default('Bearer ')
+								.description('bearer token takes "Bearer " and token'),
+							}).unknown(),
+
 				params: {
 					username: Joi.string()
 						.required()
@@ -263,7 +299,16 @@ routes = [{
 				}
 			},
 			tags: ['api', 'private'],
-			validate: { 
+			auth: {
+                strategies:['bearer']
+            },
+			validate: {
+				headers: Joi.object({
+						Authorization: Joi.string()
+								.default('Bearer ')
+								.description('bearer token takes "Bearer " and token'),
+							}).unknown(),
+
 				query: {
 					page: Joi.number()
 						.description('the page number')
@@ -294,7 +339,16 @@ routes = [{
 				}
 			},
 			tags: ['api', 'private'],
-			validate: { 
+			auth: {
+            	strategies:['bearer']
+            },
+			validate: {
+				headers: Joi.object({
+						Authorization: Joi.string()
+								.default('Bearer ')
+								.description('bearer token takes "Bearer " and token'),
+							}).unknown(),
+
 				payload: {
 					username: Joi.string()
 						.description('3-30 letters or numbers')
@@ -340,7 +394,16 @@ routes = [{
 				}
 			},
 			tags: ['api', 'private'],
+			auth: {
+                strategies:['bearer']
+            },
 			validate: {
+				headers: Joi.object({
+						Authorization: Joi.string()
+								.default('Bearer ')
+								.description('bearer token takes "Bearer " and token'),
+							}).unknown(),
+
 				params: {
 					username: Joi.string()
 						.required()
@@ -387,7 +450,16 @@ routes = [{
 				}
 			},
 			tags: ['api', 'private'],
-			validate: { 
+			auth: {
+                strategies:['bearer']
+            },
+			validate: {
+				headers: Joi.object({
+						Authorization: Joi.string()
+								.default('Bearer ')
+								.description('bearer token takes "Bearer " and token'),
+							}).unknown(),
+	
 				params: {
 					username: Joi.string()
 						.required()

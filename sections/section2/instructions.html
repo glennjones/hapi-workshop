@@ -33,7 +33,7 @@
           <ul class="tasks">
            <li><a href="#task1">Copying files for this section</a></li>
            <li><a href="#task2">Updating package.js</a></li>
-           <li><a href="#task2">Creating routes.js</a></li>
+           <li><a href="#task2">Creating routes.js and handler.js</a></li>
            <li><a href="#task3">Server stactic files</a></li>
            <li><a href="#task4">Templates and JSON</a></li>
            <li><a href="#task4">Markdown and Readme</a></li>
@@ -92,35 +92,90 @@
         <section>
 
 
-<!--         <section class="task"  id="task3">  
-          <h3>Installing Hapi.js</h3>
-          <p>Use npm to install happy in the node command line tab type:<p>
+         <section class="task" id="task1" >
+          <h3>Creating routes.js and handler.js</h3>
+          <p>We to create two file in our project <code>routes.js</code> and <code>handler.js</code><p>
 
-          <ul>
-           <li><code>$ npm install hapi --save</code></li>
-          </ul>
-
-          <p>The hapi.js module should now download into your project and the <strong>package.json</strong> file should be updated. Once it has finshed, then create a new file in your project called <strong>app.js</strong>. Copy the code below into <strong>app.js</strong> and save it.</p>
+          <p>In the <code>routes.js</code> add the following code:<p>
 
 <pre><code class="javascript">
-var Hapi = require('hapi');
+'use strict';
+var hapi        = require('hapi'),
+    Joi         = require('joi'),
+    handlers    = require('../lib/handlers.js'),
+    routes,
+    standardHTTPErrors,
+    extendedHTTPErrors;
 
-// Create a server with a host and port
-var server = new Hapi.Server('localhost', 3005);
 
-// Add the route
-server.route({
-    method: 'GET',
-    path: '/hello',
-    handler: function (request, reply) {
+function init( ){
+}
 
-        reply('hello world');
-    }
-});
 
-// Start the server
-server.start();
+standardHTTPErrors = [
+  { code: 400, message: 'Bad Request' },
+  { code: 500, message: 'Internal Server Error'}
+];
+
+extendedHTTPErrors = [
+  { code: 400, message: 'Bad Request' },
+  { code: 404, message: 'Not Found' },
+  { code: 500, message: 'Internal Server Error'}
+];
+
+
+
+routes = [{ },]
+
+
+exports.init = init;
+exports.routes = routes;
 </code></pre>
+
+
+          <p>In the <code>handler.js</code> add the following code:<p>
+
+<pre><code class="javascript">
+'use strict';
+
+var Fs        = require('fs'),
+    Path      = require('path'),
+    Hapi      = require('hapi'),
+    Boom      = require('boom'),
+    Joi       = require('joi'),
+    Pack      = require('../package');
+
+
+function init( ){
+}
+
+exports.init = init;
+
+</code></pre>
+
+
+        <section>
+
+
+        <section class="task"  id="task3">  
+          <h3>Server stactic files</h3>
+          <p>In the <code>routes.js</code> file replace the <code>routes</code> property with the code below.<p>
+
+<pre><code class="javascript">
+routes = [{
+    method: 'GET',
+    path: '/{path*}',
+    handler: {
+      directory: {
+        path: './public',
+        listing: false,
+        index: true
+      }
+    }
+  }]
+</code></pre>
+
+        <p>Then restart node <p>
 
         <section>
 

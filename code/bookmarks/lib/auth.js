@@ -53,8 +53,9 @@ Auth.prototype = {
 					    callback(err, true, { 
 					    	token: token, 
 					    	user: { 
-					    		id: user.id, 
-					    		name: user.name 
+					    		username: user.username,  
+					    		name: user.name,
+					    		groups: user.groups
 					    	}
 					    });
 					}
