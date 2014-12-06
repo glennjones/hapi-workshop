@@ -1,7 +1,8 @@
 'use strict';
 var hapi        = require('hapi'),
     Joi         = require('joi'),
-    handlers    = require('../lib/handlers.js'),
+    handlers    = require('./handlers.js'),
+    Utils 		= require('./utilities.js'),
     routes;
 
 

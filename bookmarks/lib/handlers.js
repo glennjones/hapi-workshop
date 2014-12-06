@@ -7,6 +7,7 @@ var Fs				= require('fs'),
 	Joi            	= require('joi'),
 	Bcrypt  		= require('bcrypt-nodejs'),
 	Pack            = require('../package'),
+	Utils 			= require('./utilities.js'),
 	Bookmarks 		= require('./bookmarks').Bookmarks;
 
 
