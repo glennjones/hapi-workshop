@@ -1,0 +1,59 @@
+body {
+        padding: 2em;
+        font-family: Lato, "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+        font-size: 1.20000em;
+        font-weight: 400;
+        color: #333333;
+
+      }
+
+      article{
+        max-width: 35em;
+        margin: 0 auto; 
+      }
+
+      code{
+        padding: .2rem .33rem;
+        color: #6f6f6f;
+        background-color: #f3f3f3;
+      }
+
+      a {
+        color: #33a0e8;
+        text-decoration: none;
+      }
+
+      a:hover, a:active {
+        color: #fc0599;
+        text-decoration: none;
+      }
+
+      p{
+        margin: 0;
+        line-height: 1.62500em;
+      }
+
+      ul, ol{
+        line-height: 1.62500em;
+      }
+
+      h1{
+        font-size: 2em;
+      }
+
+      h2{
+        margin-top: 3em;
+        margin-bottom: 0;
+      }
+
+
+      h3{
+        margin-top: 3em;
+        margin-bottom: 0;
+      }
+
+      .sectional-nav{
+        font-weight: bold;
+        margin-top: 2em;
+        margin-bottom: 2em;
+      }
