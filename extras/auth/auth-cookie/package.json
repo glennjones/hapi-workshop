@@ -1,0 +1,16 @@
+{
+  "name": "auth-cookie",
+  "version": "0.0.1",
+  "description": "auth-cookie",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Glenn Jones <glennjonesnet@gmail.com> (http://glennjones.net/)",
+  "license": "MIT",
+  "dependencies": {
+    "dulcimer": "2.5.0",
+    "hapi": "7.5.2",
+    "hapi-auth-cookie": "1.4.2"
+  }
+}

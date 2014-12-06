@@ -1,0 +1,208 @@
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8">
+
+    <title>Note</title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes"> 
+    <meta name="viewport" content="initial-scale=1" >
+
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    
+
+    <style>
+      body {
+        padding: 2em;
+        font-family: Lato, "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+        font-size: 1.20000em;
+        font-weight: 400;
+        color: #333333;
+
+      }
+
+      article{
+        max-width: 35em;
+        margin: 0 auto; 
+      }
+
+      code{
+        padding: .2rem .33rem;
+        color: #6f6f6f;
+        background-color: #f3f3f3;
+      }
+
+      a {
+        color: #33a0e8;
+        text-decoration: none;
+      }
+
+      a:hover, a:active {
+        color: #fc0599;
+        text-decoration: none;
+      }
+
+      p{
+        margin: 0;
+        line-height: 1.62500em;
+      }
+
+      ul, ol{
+        line-height: 1.62500em;
+      }
+
+      h1{
+        font-size: 2em;
+      }
+
+      h2{
+        margin-top: 3em;
+        margin-bottom: 0;
+      }
+
+
+      h3{
+        margin-top: 3em;
+        margin-bottom: 0;
+      }
+
+
+    </style>
+
+
+
+  </head>
+
+  <body>
+
+    <article class="h-entry">
+
+      <h1 class="p-name">Async Special:</br> Hapi.js Workshop - Prerequisites:</h1>
+
+      <div class="e-content">
+
+        <p class="h-event"><time class="dt-start" datetime="2014-12-06T01:00:00Z">Saturday 6 Dec 1pm</time> &dash; <time class="dt-end" datetime="2014-12-06T01:00:00Z">5pm</time> at <a href="http://68middle.st/" class="p-location">68 Middle Street, Brighton</a></p>
+
+
+        <h2>Software</h2>
+        <p>Even if you have the software installed already please read the instructions and make sure you have the right versions. The rest of this document is split into two sections installing and updating.<p>
+
+        <ul>
+         <li>Node.js <code>v0.10.x</code></li>
+         <li>Mongodb <code>v2.4.x</code></li>
+         <li>Robomongo <code>v0.8.4</code></li>
+         <li>Postman</li>
+         <li>Chrome browser</li>
+         <li>node-inspector <code>v0.7.4</code></li>
+         <li>nodemon <code>v1.2.1</code></li>
+         <li>modulus <code>v3.0.2</code></li>
+        </ul>
+
+        <section>
+          <h2>Installing</h2>
+           
+          <h3>Installing Node.js</h3> 
+          If you do not have node.js on your laptop
+          <ol>
+           <li>Go to <a href="http://nodejs.org/">http://nodejs.org/</a> and click the install button on the webpage</li>
+           <li>Open the downloaded file and follow the instructions in the installer</li>
+           <li>Once installed open up the command line and type <code>$ node –v</code>  it should return <code>v0.10.33</code></li>
+          </ol>
+
+          <h3>Installing Mongodb</h3>
+          <p>If you do not have mongodb on your laptop</p>
+          <ol>
+           <li>Go to <a href="http://www.mongodb.org/">http://www.mongodb.org/</a> and click the “Download MongoDB 2.6” button then select the download for your OS</li> 
+           <li>Open the downloaded file and follow the instructions in the installer</li>
+           <li>Once installed open up the command line and type <code>$ mongod –version</code> it should return <code>db version 2.6.5</code></li>
+          </ol>
+
+          <h3>Installing Robomongo</h3>
+          <p>Download the application from <a href="http://www.robomongo.org/">http://www.robomongo.org/</a> and follow the install instructions. The current version is 0.8.4</p>
+
+
+          <h3>Installing Chrome</h3>
+          <p>If Chrome is not already installed on your laptop, download the browser from <a href="http://www.google.co.uk/intl/en_uk/chrome/browser/index.html">http://www.google.co.uk/intl/en_uk/chrome/browser/index.html</a>. Chrome is needed for debugging node and running the Postman app.</p>
+
+          <h3>Installing Postman</h3>
+          <p>Postman is a “Packaged Chrome App” and as such runs within Chrome. If you do not have Postman on your laptop:</p>
+          <ol>
+            <li>In the Chrome browser go to <a href="http://www.getpostman.com/">http://www.getpostman.com/</a> and click the download button, then follow the install instructions in the Chrome Web Store.</li>
+          </ol>
+
+          <h3>Installing node modules</h3>
+          <p>If you do not have node-inspector or nodemon your laptop, once your node.js is installed, open a command line and type </p>
+          <ol>
+          <li><code>$ npm install -g node-inspector</code></li>
+          <li><code>$ npm install -g nodemon</code></li>
+          </ol>
+          <p>You may have to install these modules using the sudo command i.e. <code>$ sudo npm install -g nodemon</code></p>
+
+
+          <h3>Installing modulus</h3>
+          <p>At the end of the workshop I will be showing you how to deploy an API to the web. I will do this on the <a href="https://modulus.io/">https://modulus.io/</a> hosting platform. If you wish to follow along and deploy your work to web you will need to setup an account. Modulus offers $15 free credit for you to try the service, which should last a month.</p>
+          <ol>
+            <li>Create an account at <a href="https://modulus.io/register">https://modulus.io/register</a></li>
+            <li>Type <code>$ npm install -g modulus</code> into a command line to install the deploy client. You may need to use sudo command  i.e. <code>$ sudo npm install -g modulus</code></li>
+          </ol>
+
+        </section>
+
+
+
+        <section>
+
+          <h2>Updating</h2>
+          <p>Below are the instructions for updating software and tools if you have older versions installed on your laptop.</p>
+
+
+          <h3>Updating Node.js</h3> 
+          <p>First check the version number. Any version from 0.10.x greater will be OK.</p>
+          <ol>
+            <li>Open up the command line and type <code>$ node –v</code> it should return a version number i.e. <code>v0.10.33</code></li> 
+            <li>If you have a lower version then 0.10.x please update node.js using the method you first installed it with. This could be with Homebrew or another package management system or it could have been installed directly from <a href="http://nodejs.org/">http://nodejs.org/</a></li>
+            <li>Once updated please check the version again using the command <code>$ node –v</code></li>  
+          </ol>
+
+          <h3>Updating Mongodb</h3>
+          <p>Any version from 2.4.x greater will be OK.</p> 
+          <ol>
+            <li>To check the version type <code>$ mongo –version</code> into the command line.</li> 
+            <li>If you have a lower version please update Mongodb using the method you first installed it with. This could be with Homebrew or another package management system or it could have been installed directly from <a href="http://www.mongodb.org/">http://www.mongodb.org/</a> 
+            </br><strong>Please backup any data you have in Mongodb  before upgrading</strong></li>
+            <li>Once updated please check the version again using the command <code>$ mongo –version</code></li>
+          </ol>
+
+          <h3>Updating Robomongo</h3>
+          <p>Robomongo is a standalone application the current version is 0.8.4. If you need to upgrade just download and install the newer version from <a href="http://www.robomongo.org/">http://www.robomongo.org/</a></p>
+
+          <h3>Updating node modules</h3> 
+          <p>To make sure you have the current version of the node modules run the following commands:</p> 
+          <ol>
+            <li><code>$ npm update -g node-inspector</code></li>
+            <li><code>$ npm update -g nodemon</code></li>
+            <li><code>$ npm update -g modulus</code></li>
+          </ol>
+
+          <h3>Updating Chrome and Postman</h3>
+          <p>You should not need to upgrade Chrome or Postman as they are upgraded automatically. </p>
+
+        </section>
+
+
+        <section>
+          <h2>Hardware</h2>
+          <p>I will be using a Mac during the workshop, the code examples we will build should work on other OSs, but I may not have time to test them before the workshop!</p>
+        </section>
+
+      </div>  
+    </article>
+
+
+  </body> 
+
+</html>
+
+

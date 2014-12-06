@@ -1,0 +1,19 @@
+{
+  "name": "auth-bearer",
+  "version": "0.0.1",
+  "description": "Eaxmaple auth-bearer and hapi.js",
+  "main": "app.js",
+  "dependencies": {
+    "hapi": "^7.5.2",
+    "hapi-auth-bearer-token": "^2.2.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "auth",
+    "bearer"
+  ],
+  "author": "Glenn Jones <glennjonesnet@gmail.com> (http://glennjones.net/)",
+  "license": "MIT"
+}

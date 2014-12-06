@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{{title}}}</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/readme.css" />
+
+
+    {{> head}}
+
+
+  </head>
+  <body>
+
+    <div class="wrapper">
+        <header>
+            <h1 class="home-link"><a href="/">Register</a></h1>
+        </header>
+
+        <p>
+            <strong>{{message}}</strong>
+        </p>
+
+        <form method="post" >
+            <fieldset>
+                <label for="name">Name</label>
+                <input type="text" name="name"/>
+            </fieldset>
+            <fieldset>
+                <label for="email">Eamil</label>
+                <input type="text" name="email"/>
+            </fieldset>    
+            <fieldset>
+                <label for="username">Username</label>
+                <input type="text" name="username"/>
+            </fieldset>   
+            <fieldset>
+                <label for="password">Password</label>
+                <input type="password" name="password"/>
+            </fieldset> 
+
+            <input class="button" type="submit" value="Register"/>
+        </form>
+
+   
+     </div>
+
+  </body>
+</html>

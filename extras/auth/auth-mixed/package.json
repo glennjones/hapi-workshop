@@ -1,0 +1,22 @@
+{
+  "name": "auth-mixed",
+  "version": "0.0.1",
+  "description": "Eaxmaple auth-mixed basic and bearer using hapi.js",
+  "main": "index.js",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "hapi": "^7.5.2",
+    "hapi-auth-basic": "^1.1.1",
+    "hapi-auth-bearer-token": "^2.2.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "auth",
+    "basic",
+    "bearer"
+  ],
+  "author": "Glenn Jones <glennjonesnet@gmail.com> (http://glennjones.net/)",
+  "license": "MIT"
+}
