@@ -24,6 +24,11 @@ module.exports = {
 		},	
 
 
+		isFunction: function(obj) {
+  			return !!(obj && obj.constructor && obj.call && obj.apply);
+		},
+
+
 		trim: function (str) {
 			if(this.isString(str) && str !== ''){
 				return str.replace(/^\s+|\s+$/g, "");
@@ -82,6 +87,8 @@ module.exports = {
 					callback( err, data );
 				});
 		}
+
+
 
 
 };

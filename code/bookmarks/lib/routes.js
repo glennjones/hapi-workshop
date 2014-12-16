@@ -7,9 +7,6 @@ var hapi        = require('hapi'),
 	extendedHTTPErrors;
 
 
-function init( db ){
-	handlers.init( db );
-}
 
 
 standardHTTPErrors = [
@@ -25,7 +22,7 @@ extendedHTTPErrors = [
 
 
 
-routes = [{
+module.exports = [{
 		method: 'GET',
 		path: '/',
 		config: {
@@ -470,8 +467,7 @@ routes = [{
 	},]
 
 
-exports.init = init;
-exports.routes = routes;
+
 
 
 

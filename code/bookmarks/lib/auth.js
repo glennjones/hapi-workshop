@@ -3,23 +3,16 @@
 var Hapi    	= require('hapi'),
 	Boom	   	= require('boom'),
     Bcrypt  	= require('bcrypt-nodejs'),
-    Users      	= require('../lib/users.js').Users,
-    Tokens      = require('../lib/tokens.js').Tokens;
+    Users      	= require('../lib/users.js'),
+    Tokens      = require('../lib/tokens.js');
 	
 
 
-function Auth ( db ) {
-	this.db = db;
-	this.users = new Users( db );
-	this.tokens = new Tokens( db );
-}
-
-
-Auth.prototype = {
+module.exports = {
 
 	// validation function for basic strategy
 	validateBasic: function (username, password, callback) {
-		this.users.get({username: username}, function(err, user){
+		Users.get({username: username}, function(err, user){
 			if(err || !user){
 				callback(Boom.unauthorized(['user not found'], ['basic']), false);
 			}else{
@@ -40,13 +33,13 @@ Auth.prototype = {
 		var self = this;
 
 		// get token
-		this.tokens.get({accessToken: token}, function(err, token){
+		Tokens.get({accessToken: token}, function(err, token){
 			if(err || !token || !token.owner){
 				callback(err, false);
 			}else{
 
 				// user who owns token
-				self.users.get({username: token.owner}, function(err, user){
+				Users.get({username: token.owner}, function(err, user){
 					if(err || !user){
 						callback(err, false);
 					}else{
@@ -69,7 +62,7 @@ Auth.prototype = {
 	validateCookie: function(session, callback) {
 		console.log(session);
 
-		this.users.get({username: session.username}, function(err, user){
+		Users.get({username: session.username}, function(err, user){
 			if(err || !user){
 				callback(Boom.unauthorized(['user not found'], ['cookie']), false);
 			}else{
@@ -90,12 +83,8 @@ Auth.prototype = {
 		})
 	}
 
-   
-
-
+  
 
 }
 
 
-
-exports.Auth = Auth;

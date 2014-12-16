@@ -6,28 +6,12 @@ var Fs				= require('fs'),
 	Boom            = require('boom'),
 	Joi            	= require('joi'),
 	Bcrypt  		= require('bcrypt-nodejs'),
-	Users       	= require('../lib/users.js').Users,
-	Tokens       	= require('../lib/tokens.js').Tokens,
-	Bookmarks       = require('../lib/bookmarks.js').Bookmarks,
+	Users      		= require('../lib/users.js'),
+    Tokens      	= require('../lib/tokens.js'),
+    Bookmarks      	= require('../lib/bookmarks.js'),
 	Utils           = require('../lib/utilities.js'),
 	Pack            = require('../package');
 
-
-
-var users,
-	tokens,
-	bookmarks;
-
-
-function init( db ){
-	users = new Users( db );
-	tokens = new Tokens( db );
-	bookmarks = new Bookmarks( db );
-}
-
-
-
-/* ----------------------------------------------------------------------------------- */
 
 
 function index(request, reply) {
@@ -80,7 +64,7 @@ function token(request, reply) {
     	if(request.auth && 
     		request.auth.credentials && 
     		request.auth.credentials.user){
-			tokens.get({owner: request.auth.credentials.user.username}, function(err, token){
+			Tokens.get({owner: request.auth.credentials.user.username}, function(err, token){
 				renderJSON( request, reply, err, {
 					access_token: token.accessToken,
 					expires_in: token.expires,
@@ -109,7 +93,7 @@ function logon(request, reply) {
         }
         else {
 			if(!message){
-			    users.get({username: request.payload.username}, function(err, user){
+			    Users.get({username: request.payload.username}, function(err, user){
 			    	if(err){
 			    		message = 'Invalid username or password';
 			    		displayForm(message)
@@ -177,7 +161,7 @@ function register(request, reply) {
         	if(err){
         		displayForm(err.message);
         	}else{
-		        users.add({item: value},function(err, user){
+		        Users.add({item: value},function(err, user){
 		        	if(err || !user){
 		        		message = 'Unable to create new user: ' + err
 		        		displayForm(message);	
@@ -210,7 +194,7 @@ function getBookmark(request, reply) {
 	var options = {
 			id: request.params.id
 		};
-	bookmarks.get( options, function( error, result ){
+	Bookmarks.get( options, function( error, result ){
 		renderJSON( request, reply, error, result );
 	}); 
 }
@@ -225,7 +209,7 @@ function getBookmarks(request, reply) {
 	options.page = (request.query.page)? parseInt( request.query.page, 10 ) : 1;
 	options.pageSize = (request.query.pagesize)? parseInt( request.query.pagesize, 10 ) : 20;
 
-	bookmarks.find( options, function( error, result ){
+	Bookmarks.find( options, function( error, result ){
 		renderJSON( request, reply, error, result );
 	}); 
 }
@@ -235,7 +219,7 @@ function addBookmark (request, reply) {
 	var options = {item: {}};
 	options.item = createBookmarkItem(request);
 
-	bookmarks.add( options, function( error, result ){
+	Bookmarks.add( options, function( error, result ){
 		renderJSON( request, reply, error, result );
 	}); 
 }
@@ -248,7 +232,7 @@ function updateBookmark (request, reply) {
 	};
 	options.item = createBookmarkItem(request);
 
-	bookmarks.update( options, function( error, result ){
+	Bookmarks.update( options, function( error, result ){
 		renderJSON( request, reply, error, result );
 	}); 
 }
@@ -287,7 +271,7 @@ function removeBookmark (request, reply) {
 	var options = {
 			id: request.params.id
 		};
-	bookmarks.remove( options, function( error, result ){
+	Bookmarks.remove( options, function( error, result ){
 		renderJSON( request, reply, error, result );
 	}); 
 }
@@ -301,7 +285,7 @@ function getUser(request, reply) {
 	var options = {
 			username: request.params.username
 		};
-	users.get( options, function( error, result ){
+	Users.get( options, function( error, result ){
 		renderJSON( request, reply, error, result );
 	}); 
 }
@@ -316,7 +300,7 @@ function getUsers(request, reply) {
 	options.page = (request.query.page)? parseInt( request.query.page, 10 ) : 1;
 	options.pageSize = (request.query.pagesize)? parseInt( request.query.pagesize, 10 ) : 20;
 
-	users.find( options, function( error, result ){
+	Users.find( options, function( error, result ){
 		renderJSON( request, reply, error, result );
 	}); 
 }
@@ -326,7 +310,7 @@ function addUser (request, reply) {
 	var options = {item: {}};
 	options.item = createUserItem(request);
 
-	users.add( options, function( error, result ){
+	Users.add( options, function( error, result ){
 		renderJSON( request, reply, error, result );
 	}); 
 }
@@ -339,7 +323,7 @@ function updateUser (request, reply) {
 	};
 	options.item = createUserItem(request);
 
-	users.update( options, function( error, result ){
+	Users.update( options, function( error, result ){
 		renderJSON( request, reply, error, result );
 	}); 
 }
@@ -378,7 +362,7 @@ function removeUser (request, reply) {
 	var options = {
 			username: request.params.username
 		};
-	users.remove( options, function( error, result ){
+	Users.remove( options, function( error, result ){
 		renderJSON( request, reply, error, result );
 	}); 
 }
@@ -406,7 +390,6 @@ function renderJSON( request, reply, err, result ){
 /* ----------------------------------------------------------------------------------- */
 
 
-exports.init = init;
 exports.index = index;
 exports.admin = admin;
 exports.token = token;

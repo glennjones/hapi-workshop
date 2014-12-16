@@ -3,47 +3,36 @@ var Hapi            = require('hapi'),
     Boom            = require("boom"),
     Mongo           = require('mongodb'),
     Pack            = require('./package'),
-    Routes          = require('./lib/routes.js'),
-    Config          = require('./lib/config.js');
+    Config          = require('./lib/config-manager.js'),
+    Routes          = require('./lib/routes.js');
 
 
 var server,
-    swaggerOptions,
-    dbOptions,
-    host = (process.env.HOST)? process.env.HOST : 'localhost',
-    port = (process.env.PORT)? parseInt(process.env.PORT, 10) : 3005;
+    swaggerOptions;
 
 
 // create server
-server = Hapi.createServer(host, port);
+server = Hapi.createServer(Config.server.host, Config.server.port);
 
 
 swaggerOptions = {
-    basePath: 'http://localhost:3005',
+    basePath: server.info.uri,
     payloadType: 'form'
 },
 
 
 
-// create options for connection to mongodb
-dbOptions = {
-    "url": "mongodb://localhost:27017/bookmarks"
-};
-
 // add hapi-mongodb plug-in
 server.pack.register([{
     plugin: require('hapi-swagger'), 
     options: swaggerOptions
-},{
-    plugin: require('hapi-mongodb'),
-    options: dbOptions
 }], function (err) {
     if (err) {
         console.error(err);
     }else{
 
         // hapi server settings
-        server.route(Routes.routes);
+        server.route(Routes);
         server.views({
                 path: 'templates',
                 engines: { html: require('handlebars') },
@@ -53,7 +42,7 @@ server.pack.register([{
             })
 
         server.start(function(){
-            console.info('Server started at ' + server.info.uri);
+            console.info('server started at ' + server.info.uri);
         });
 
     }

@@ -1,6 +1,6 @@
 # About
 
-This is an example showing the use of the [hapi-mongodb](https://github.com/Marsup/hapi-mongodb) plugin to share a MongoDB connection across the whole HAPI server. 
+This is an example showing the use of the [hapi-mongodb](https://github.com/Marsup/hapi-mongodb) plugin to share a MongoDB connection across a HAPI server. 
 
 
 

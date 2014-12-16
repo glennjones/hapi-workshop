@@ -6,42 +6,43 @@ var Url 		= require('url'),
 	Hoek 		= require('hoek'),
 	Boom 		= require('boom'),
 	ShortId 	= require('shortid'),
+	Config    	= require('../lib/config-manager.js'),
+	Database 	= require('../lib/database.js'),
 	Utils 		= require('../lib/utilities.js');
 	
 
-function Bookmarks (db) {
-	var self = this;
-	this.db = db;
-	this.collection = this.db.collection('bookmarks');
-}
+var dbOptions = {'url': Config.database.url};
 
 
-
-Bookmarks.prototype = {
+module.exports = {
 
 	// adds a new bookmark
 	add: function (options, callback){
-		var url;
-		options.item.id = ShortId.generate();
-		options.item.created = new Date();
-		options.item.modified = new Date();
+		var self = this;
+		Database.connect(dbOptions, function(err, db){
+			var url;
 
-		// validate string url using node lib
-		url = Url.parse(options.item.url)
-		if( url ){
+			options.item.id = ShortId.generate();
+			options.item.created = new Date();
+			options.item.modified = new Date();
 
-			options.item.host = url.host;
-			this.collection.insert(options.item, { safe: true }, function (err, doc) {
-			    if (err) {
-			    	callback(Boom.badImplementation('Failed to add bookmark to db', err), null);	
-			    } else {
-			      	callback(null, Utils.cleanDoc(doc));
-			    }
-			});
+			// validate string url using node lib
+			url = Url.parse(options.item.url)
+			if( url ){
 
-		}else{
-			callback(Boom.badRequest('Url was not parsable'), null);
-		}
+				options.item.host = url.host;
+				db.collection('bookmarks').insert(options.item, { safe: true }, function (err, doc) {
+				    if (err) {
+				    	callback(Boom.badImplementation('Failed to add bookmark to db', err), null);	
+				    } else {
+				      	callback(null, Utils.cleanDoc(doc));
+				    }
+				});
+
+			}else{
+				callback(Boom.badRequest('Url was not parsable'), null);
+			}
+		});
 	},
 
 
@@ -49,31 +50,33 @@ Bookmarks.prototype = {
 	// update an existing bookmark
 	update: function (options, callback){
 		var self = this;
+		Database.connect(dbOptions, function(err, db){
 
-		this.get(options, function(err, doc){
-			if(doc){
+			self.get(options, function(err, doc){
+				if(doc){
 
-				// explicit property update
-				doc.url = options.item.url;
-				doc.title = options.item.title;
-				doc.tags = options.item.tags;
-				doc.description = options.item.description;
+					// explicit property update
+					doc.url = options.item.url;
+					doc.title = options.item.title;
+					doc.tags = options.item.tags;
+					doc.description = options.item.description;
 
-				// update modified timestamp
-				doc.modified = new Date();
+					// update modified timestamp
+					doc.modified = new Date();
 
-				// save changes
-				self.collection.update( {'id': options.id}, doc, function(err, count){
-					if(!count || count === 0){
-						callback(Boom.notFound('Bookmark not found', err), null);
-					}else{
-						self.get(options, callback);
-					}
-				});
+					// save changes
+					db.collection('bookmarks').update( {'id': options.id}, doc, function(err, count){
+						if(!count || count === 0){
+							callback(Boom.notFound('Bookmark not found', err), null);
+						}else{
+							self.get(options, callback);
+						}
+					});
 
-			}else{
-				callback(Boom.notFound('Bookmark not found'), null);
-			}
+				}else{
+					callback(Boom.notFound('Bookmark not found'), null);
+				}
+			});
 		});
 	},
 
@@ -81,12 +84,14 @@ Bookmarks.prototype = {
 
 	// get a single bookmark
 	get: function(options, callback){
-		this.collection.findOne( {'id': options.id}, function(err, doc){
-			if(doc){
-				callback(null, Utils.cleanDoc(doc));
-			}else{
-				callback(Boom.notFound('Bookmark not found'), null);
-			}
+		Database.connect(dbOptions, function(err, db){
+			db.collection('bookmarks').findOne( {'id': options.id}, function(err, doc){
+				if(doc){
+					callback(null, Utils.cleanDoc(doc));
+				}else{
+					callback(Boom.notFound('Bookmark not found'), null);
+				}
+			});
 		});
 	},
 
@@ -109,48 +114,53 @@ Bookmarks.prototype = {
 		options = Hoek.applyToDefaults(defaults, options);
 		skipFrom = (options.page * options.pageSize) - options.pageSize;
 
-		// create and fire query
-		cursor = this.collection.find(options.query)
-		    .skip(skipFrom)
-			.limit(options.pageSize)
-			.sort(options.sort)
 
-		// process results
-	  	cursor.toArray(function(err, docs) {
-	    	if (err) {
-	      		callback({'error': err});
-	    	} else {
-				cursor.count(function(err, count) {
-					if (err) {
-						callback(err, null);
-					}else{
-						var i = docs.length;
-						while (i--) {
-						    docs[i] = Utils.cleanDoc(docs[i]);
+		Database.connect(dbOptions, function(err, db){
+			// create and fire query
+			cursor = db.collection('bookmarks').find(options.query)
+			    .skip(skipFrom)
+				.limit(options.pageSize)
+				.sort(options.sort)
+
+			// process results
+		  	cursor.toArray(function(err, docs) {
+		    	if (err) {
+		      		callback({'error': err});
+		    	} else {
+					cursor.count(function(err, count) {
+						if (err) {
+							callback(err, null);
+						}else{
+							var i = docs.length;
+							while (i--) {
+							    docs[i] = Utils.cleanDoc(docs[i]);
+							}
+					
+							callback(null, {
+								'items': docs,
+								'count': count,
+								'pageSize': options.pageSize,
+								'page': options.page,
+								'pageCount': Math.ceil(count / options.pageSize)
+							});
 						}
-				
-						callback(null, {
-							'items': docs,
-							'count': count,
-							'pageSize': options.pageSize,
-							'page': options.page,
-							'pageCount': Math.ceil(count / options.pageSize)
-						});
-					}
-				});
-	    	}
+					});
+		    	}
+		  	});
 	  	});
 	},
 
 
 	// remove bookmark from collection using id
 	remove: function(options, callback){
-		this.collection.findAndRemove({'id': options.id}, function(err, doc) {
-			if(!doc){
-				callback(Boom.notFound('Bookmark not found', err), null);
-			}else{
-				callback(err, Utils.cleanDoc(doc));	
-			}
+		Database.connect(dbOptions, function(err, db){
+			db.collection('bookmarks').findAndRemove({'id': options.id}, function(err, doc) {
+				if(!doc){
+					callback(Boom.notFound('Bookmark not found', err), null);
+				}else{
+					callback(err, Utils.cleanDoc(doc));	
+				}
+			});
 		});
 	},
 
@@ -158,9 +168,11 @@ Bookmarks.prototype = {
 
 	// remove all bookmark from collection
 	removeAll: function(callback){
-		this.collection.remove({}, function(err, count) {
-			console.log(err, count)
-			callback(err, count);
+		Database.connect(dbOptions, function(err, db){
+			db.collection('bookmarks').remove({}, function(err, count) {
+				console.log(err, count)
+				callback(err, count);
+			});
 		});
 	}
 
@@ -169,4 +181,3 @@ Bookmarks.prototype = {
 };
 
 
-exports.Bookmarks = Bookmarks;

@@ -6,15 +6,13 @@ var Url 		= require('url'),
 	Hoek 		= require('hoek'),
 	Boom 		= require('boom'),
 	Randtoken 	= require('rand-token'),
+	Config    	= require('../lib/config-manager.js'),
+	Database 	= require('../lib/database.js'),
 	Utils 		= require('../lib/utilities.js');
 	
 
-function Tokens (db) {
-	var self = this;
-	this.db = db;
-	this.collection = this.db.collection('tokens');
-}
-
+var dbOptions = {'url': Config.database.url},
+	expiresIn = 31536000; // one year of seconds
 
 /*token structure
 {
@@ -29,51 +27,55 @@ function Tokens (db) {
 */
 
 
-// length of token before it expires
-var expiresIn = 31536000; // one year of seconds
 
-
-Tokens.prototype = {
+module.exports = {
 
 	// adds a new token
 	add: function (options, callback){
-		var url;
-		options.item.accessToken = Randtoken.generate(32);;
-		options.item.refreshToken = Randtoken.generate(32);;
-		options.item.created = new Date();
-		options.item.modified = new Date();
-		options.item.expires = Math.floor(Date.now()/1000) + expiresIn;
+		Database.connect(dbOptions, function(err, db){
+			var url;
 
-		this.collection.insert(options.item, { safe: true }, function (err, doc) {
-		    if (err) {
-		    	callback(Boom.badImplementation('Failed to add token to db', err), null);	
-		    } else {
-		      	callback(null, Utils.cleanDoc(doc));
-		    }
+			options.item.accessToken = Randtoken.generate(32);;
+			options.item.refreshToken = Randtoken.generate(32);;
+			options.item.created = new Date();
+			options.item.modified = new Date();
+			options.item.expires = Math.floor(Date.now()/1000) + expiresIn;
+
+			db.collection('tokens').insert(options.item, { safe: true }, function (err, doc) {
+			    if (err) {
+			    	callback(Boom.badImplementation('Failed to add token to db', err), null);	
+			    } else {
+			      	callback(null, Utils.cleanDoc(doc));
+			    }
+			});
 		});
 	},
 
 
 	// get a single token
 	get: function(options, callback){
-		this.collection.findOne( this.buildQuery(options), function(err, doc){
-			if(doc){
-				callback(null, Utils.cleanDoc(doc));
-			}else{
-				callback(Boom.notFound('token not found'), null);
-			}
+		Database.connect(dbOptions, function(err, db){
+			db.collection('tokens').findOne( this.buildQuery(options), function(err, doc){
+				if(doc){
+					callback(null, Utils.cleanDoc(doc));
+				}else{
+					callback(Boom.notFound('token not found'), null);
+				}
+			});
 		});
 	},
 
 
 	// remove token from collection using accessToken
 	remove: function(options, callback){
-		this.collection.findAndRemove( this.buildQuery(options), function(err, doc) {
-			if(!doc){
-				callback(Boom.notFound('token not found', err), null);
-			}else{
-				callback(err, Utils.cleanDoc(doc));	
-			}
+		Database.connect(dbOptions, function(err, db){
+			db.collection('tokens').findAndRemove( this.buildQuery(options), function(err, doc) {
+				if(!doc){
+					callback(Boom.notFound('token not found', err), null);
+				}else{
+					callback(err, Utils.cleanDoc(doc));	
+				}
+			});
 		});
 	},
 
@@ -90,10 +92,6 @@ Tokens.prototype = {
 		return query;
 	}
 
-
-
-
 };
 
 
-exports.Tokens = Tokens;
