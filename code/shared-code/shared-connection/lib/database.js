@@ -1,6 +1,10 @@
 
 'use strict';
-//  a shared database access layer
+// a shared mongodb connection module
+// connect
+// disconnect
+// getConnectionInfo
+
 
 var Url       = require('url'),
     Mongodb   = require('mongodb'),
@@ -55,6 +59,7 @@ module.exports =  {
             options = Hoek.applyToDefaults(defaults, options);
 
             // stop racing condition by collecting callbacks while connection is made
+            console.log('connection called')
             callbacks.push(callback);
 
             // on first callback start the connection process
@@ -103,7 +108,7 @@ module.exports =  {
 
 
 
-// builds the current connect mongodb info object
+// builds the current connect mongodb info into a object
 function parseConnectionInfo(options){
   var out = {},
       parsedUrl = Url.parse(options.url);

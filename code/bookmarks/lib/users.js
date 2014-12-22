@@ -35,42 +35,46 @@ module.exports = {
 		var self = this;
 
 		Database.connect(dbOptions, function(err, db){
-			self.get({username: options.item.username}, function(err, user){
-				if(!err && user){
-					callback('User already exists', null);	
-				}else{
-					options.item.created = new Date();
-					options.item.modified = new Date();
-					options.item.revokeToken = ShortId.generate();
+			if(err && !db){
+				callback(Boom.badImplementation('Failed to connect to db', err), null);
+			}else{
+				self.get({username: options.item.username}, function(err, user){
+					if(!err && user){
+						callback('User already exists', null);	
+					}else{
+						options.item.created = new Date();
+						options.item.modified = new Date();
+						options.item.revokeToken = ShortId.generate();
 
-					if(!options.item.groups){
-						options.item.groups = ['user']
-					}
+						if(!options.item.groups){
+							options.item.groups = ['user']
+						}
 
-					// hash the password so its unreadable
-					Bcrypt.hash(options.item.password, null, null, function (err, hash) {
-						options.item.password = hash;
+						// hash the password so its unreadable
+						Bcrypt.hash(options.item.password, null, null, function (err, hash) {
+							options.item.password = hash;
 
-						// add user
-						db.collection('users').insert(options.item, { safe: true }, function (err, doc) {
-						    if (err) {
-						    	callback(Boom.badImplementation('Failed to add user to db', err), null);	
-						    } else {
+							// add user
+							db.collection('users').insert(options.item, { safe: true }, function (err, doc) {
+							    if (err) {
+							    	callback(Boom.badImplementation('Failed to add user to db', err), null);	
+							    } else {
 
-								// add token for this user
-								Tokens.add({
-										item: {
-											owner : options.item.username,
-					    					scope : '',
-									}
-								}, function(){})
+									// add token for this user
+									Tokens.add({
+											item: {
+												owner : options.item.username,
+						    					scope : '',
+										}
+									}, function(){})
 
-						      	callback(null, Utils.cleanDoc(doc));
-						    }
+							      	callback(null, Utils.cleanDoc(doc));
+							    }
+							});
 						});
-					});
-				}
-			});
+					}
+				});
+			}
 		});
 	},
 
@@ -81,36 +85,40 @@ module.exports = {
 		var self = this;
 
 		Database.connect(dbOptions, function(err, db){
-			self.get(options, function(err, doc){
-				if(doc){
+			if(err && !db){
+				callback(err, null);
+			}else{
+				self.get(options, function(err, doc){
+					if(doc){
 
-					// explicit property update
-					doc.username = options.username;
-					doc.name = options.item.name;
-					doc.email = options.item.email;
-					doc.groups = options.item.groups;
+						// explicit property update
+						doc.username = options.username;
+						doc.name = options.item.name;
+						doc.email = options.item.email;
+						doc.groups = options.item.groups;
 
-					// update modified timestamp
-					doc.modified = new Date();
+						// update modified timestamp
+						doc.modified = new Date();
 
-					// hash the password so its unreadable
-					Bcrypt.hash(options.item.password, null, null, function (err, hash) {
-						doc.password = hash;
+						// hash the password so its unreadable
+						Bcrypt.hash(options.item.password, null, null, function (err, hash) {
+							doc.password = hash;
 
-						// save changes
-						db.collection('users').update( {'username': options.username}, doc, function(err, count){
-							if(!count || count === 0){
-								callback(Boom.notFound('user not found', err), null);
-							}else{
-								self.get(options, callback);
-							}
+							// save changes
+							db.collection('users').update( {'username': options.username}, doc, function(err, count){
+								if(!count || count === 0){
+									callback(Boom.notFound('user not found', err), null);
+								}else{
+									self.get(options, callback);
+								}
+							});
 						});
-					});
 
-				}else{
-					callback(Boom.notFound('user not found'), null);
-				}
-			});
+					}else{
+						callback(Boom.notFound('user not found'), null);
+					}
+				});
+			}
 		});
 	},
 
@@ -119,13 +127,17 @@ module.exports = {
 	// get a single user
 	get: function(options, callback){
 		Database.connect(dbOptions, function(err, db){
-			db.collection('users').findOne( {'username': options.username}, function(err, doc){
-				if(doc){
-					callback(null, Utils.cleanDoc(doc));
-				}else{
-					callback(Boom.notFound('user not found'), null);
-				}
-			});
+			if(err && !db){
+				callback(Boom.badImplementation('Failed to connect to db', err), null);
+			}else{
+				db.collection('users').findOne( {'username': options.username}, function(err, doc){
+					if(doc){
+						callback(null, Utils.cleanDoc(doc));
+					}else{
+						callback(Boom.notFound('user not found'), null);
+					}
+				});
+			}
 		});
 	},
 

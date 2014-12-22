@@ -33,21 +33,25 @@ module.exports = {
 	// adds a new token
 	add: function (options, callback){
 		Database.connect(dbOptions, function(err, db){
-			var url;
+			if(err && !db){
+				callback(Boom.badImplementation('Failed to connect to db', err), null);
+			}else{
+				var url;
 
-			options.item.accessToken = Randtoken.generate(32);;
-			options.item.refreshToken = Randtoken.generate(32);;
-			options.item.created = new Date();
-			options.item.modified = new Date();
-			options.item.expires = Math.floor(Date.now()/1000) + expiresIn;
+				options.item.accessToken = Randtoken.generate(32);;
+				options.item.refreshToken = Randtoken.generate(32);;
+				options.item.created = new Date();
+				options.item.modified = new Date();
+				options.item.expires = Math.floor(Date.now()/1000) + expiresIn;
 
-			db.collection('tokens').insert(options.item, { safe: true }, function (err, doc) {
-			    if (err) {
-			    	callback(Boom.badImplementation('Failed to add token to db', err), null);	
-			    } else {
-			      	callback(null, Utils.cleanDoc(doc));
-			    }
-			});
+				db.collection('tokens').insert(options.item, { safe: true }, function (err, doc) {
+				    if (err) {
+				    	callback(Boom.badImplementation('Failed to add token to db', err), null);	
+				    } else {
+				      	callback(null, Utils.cleanDoc(doc));
+				    }
+				});
+			}
 		});
 	},
 
@@ -55,13 +59,17 @@ module.exports = {
 	// get a single token
 	get: function(options, callback){
 		Database.connect(dbOptions, function(err, db){
-			db.collection('tokens').findOne( this.buildQuery(options), function(err, doc){
-				if(doc){
-					callback(null, Utils.cleanDoc(doc));
-				}else{
-					callback(Boom.notFound('token not found'), null);
-				}
-			});
+			if(err && !db){
+				callback(Boom.badImplementation('Failed to connect to db', err), null);
+			}else{
+				db.collection('tokens').findOne( this.buildQuery(options), function(err, doc){
+					if(doc){
+						callback(null, Utils.cleanDoc(doc));
+					}else{
+						callback(Boom.notFound('token not found'), null);
+					}
+				});
+			}
 		});
 	},
 
@@ -69,13 +77,17 @@ module.exports = {
 	// remove token from collection using accessToken
 	remove: function(options, callback){
 		Database.connect(dbOptions, function(err, db){
-			db.collection('tokens').findAndRemove( this.buildQuery(options), function(err, doc) {
-				if(!doc){
-					callback(Boom.notFound('token not found', err), null);
-				}else{
-					callback(err, Utils.cleanDoc(doc));	
-				}
-			});
+			if(err && !db){
+				callback(Boom.badImplementation('Failed to connect to db', err), null);
+			}else{
+				db.collection('tokens').findAndRemove( this.buildQuery(options), function(err, doc) {
+					if(!doc){
+						callback(Boom.notFound('token not found', err), null);
+					}else{
+						callback(err, Utils.cleanDoc(doc));	
+					}
+				});
+			}
 		});
 	},
 

@@ -8,9 +8,7 @@ var Fs				= require('fs'),
 	Bookmarks 		= require('../lib/bookmarks.js'),
 	Users 			= require('../lib/users.js'),
 	Utils           = require('../lib/utilities.js'),
-
 	Pack            = require('../package');
-
 
 
 
@@ -36,59 +34,6 @@ function index(request, reply) {
 }
 
 
-
-// direct use of hapi-mongodb plug-in within handler function
-// ------------------------------------------------------
-
-function getBookmarks(request, reply) { 
-
-	var db = request.server.plugins['hapi-mongodb'].db,
-		collection = db.collection('bookmarks'),
-		cursor,
-		options,
-		self = this;
-
-	// values needed of excute search for bookmarks
-	options = {
-		page: (request.query.page)? parseInt( request.query.page, 10 ) : 1,
-		pageSize: (request.query.pagesize)? parseInt( request.query.pagesize, 10 ) : 20,
-		sort: {modified:-1},
-		skipFrom: 0,
-		query: {}
-	}
-	options.skipFrom = (options.page * options.pageSize) - options.pageSize;
-
-	// create and fire query
-	cursor = collection.find(options.query)
-	    .skip(options.skipFrom)
-		.limit(options.pageSize)
-		.sort(options.sort)
-
-	// process results
-  	cursor.toArray(function(err, docs) {
-    	if (err) {
-      		renderJSON( request, reply, err, null );
-    	} else {
-			cursor.count(function(err, count) {
-				if (err) {
-					renderJSON( request, reply, err, null);
-				}else{
-					var i = docs.length;
-					while (i--) {
-					    docs[i] = Utils.cleanDoc(docs[i]);
-					}
-					renderJSON( request, reply, null, {
-						'items': docs,
-						'count': count,
-						'pageSize': options.pageSize,
-						'page': options.page,
-						'pageCount': Math.ceil(count / options.pageSize)
-					});
-				}
-			});
-    	}
-  	});
-}
 
 
 // examples of indirect use of hapi-mongodb plug-in
@@ -193,7 +138,6 @@ function createUserItem(request){
 
 
 exports.index = index;
-exports.getBookmarks = getBookmarks;
 exports.addBookmark = addBookmark;
 exports.addUser = addUser;
 

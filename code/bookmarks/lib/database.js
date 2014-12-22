@@ -5,6 +5,7 @@
 var Url       = require('url'),
     Mongodb   = require('mongodb'),
     Joi       = require('joi'),
+    Boom      = required('boom')
     Hoek      = require('hoek');
 
 
@@ -32,6 +33,9 @@ module.exports =  {
 
    connect: function(options, callback) {
 
+      var done
+
+
       // if already we have a connection return it
       if (connectionInstance) {
         callback(null, connectionInstance);
@@ -41,7 +45,7 @@ module.exports =  {
         optionsSchema.validate(options, function (err, options) {
 
           if(err){
-            callback(err, null);
+            callback(Boom.badImplementation('Database connect options incorrect', err), null);
           }else{
 
             // add default settings.server.auto_reconnect = true, to force db reconnect when needed
@@ -66,6 +70,8 @@ module.exports =  {
                   connectionInstance = databaseConnection;
                   connectionInfo = parseConnectionInfo(options);
                   console.log('mongodb database connected:', options.url)
+                }else{
+                  err = Boom.badImplementation('Database connection error', err);
                 }
 
                 // loop callbacks

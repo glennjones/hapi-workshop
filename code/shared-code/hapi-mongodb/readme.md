@@ -3,9 +3,6 @@
 This is an example showing the use of the [hapi-mongodb](https://github.com/Marsup/hapi-mongodb) plugin to share a MongoDB connection across a HAPI server. 
 
 
-
-
-
 ## Direct use of hapi-mongodb plug-in within handler function
 This pattern works well if the ```handler``` function also calls the for data out directly rather than past that functionilty to another layer of the application. To demostrate this, take a look at the code for **GET bookmarks** API endpoint. The MongoDB db connection is created in the ```app.js``` file using ```server.pack.register```. The reference to the db called in the ```handler.js``` file using ```request.server.plugins['hapi-mongodb'].db```.
 

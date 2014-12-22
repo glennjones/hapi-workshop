@@ -1,5 +1,5 @@
 {
-  "name": "singleton-example",
+  "name": "share-connection",
   "version": "0.0.1",
   "description": "Example of using singleton shared db connection for Async Special: Hapi.js Workshop",
   "author": "Glenn Jones <glennjonesnet@gmail.com> (http://glennjones.net/)",

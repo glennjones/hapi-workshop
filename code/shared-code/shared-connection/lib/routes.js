@@ -23,31 +23,6 @@ module.exports = [{
 			}
 		}
 	}, {
-		method: 'GET',
-		path: '/bookmarks/',
-		config: {
-			handler: handlers.getBookmarks,
-			description: 'Get bookmarks',
-			notes: ['Gets a list of bookmarks from the collection'],
-			tags: ['api'],
-			validate: { 
-				query: {
-					page: Joi.number()
-						.description('the page number')
-						.optional()
-						.default(1)
-						.min(0),
-
-					pagesize: Joi.number()
-						.description('the number of items to a page')
-						.optional()
-						.default(10)
-						.min(0)
-						.max(1000)
-				}
-			}
-		}
-	}, {
 		method: 'POST',
 		path: '/bookmarks/',
 		config: {
