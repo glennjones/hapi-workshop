@@ -6,9 +6,9 @@ var Url 		= require('url'),
 	Hoek 		= require('hoek'),
 	Boom 		= require('boom'),
 	Randtoken 	= require('rand-token'),
-	Config    	= require('../lib/config-manager.js'),
-	Database 	= require('../lib/database.js'),
-	Utils 		= require('../lib/utilities.js');
+	Config    	= require('./config-manager.js'),
+	Database 	= require('./database.js'),
+	Utils 		= require('./utilities.js');
 	
 
 var dbOptions = {'url': Config.database.url},
@@ -28,12 +28,12 @@ var dbOptions = {'url': Config.database.url},
 
 
 
-module.exports = {
+module.exports =  {
 
 	// adds a new token
 	add: function (options, callback){
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
 				var url;
@@ -48,7 +48,7 @@ module.exports = {
 				    if (err) {
 				    	callback(Boom.badImplementation('Failed to add token to db', err), null);	
 				    } else {
-				      	callback(null, Utils.cleanDoc(doc));
+				      	callback(null, doc);
 				    }
 				});
 			}
@@ -58,13 +58,14 @@ module.exports = {
 
 	// get a single token
 	get: function(options, callback){
+		var self = this;
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
-				db.collection('tokens').findOne( this.buildQuery(options), function(err, doc){
+				db.collection('tokens').findOne( self.buildQuery(options), function(err, doc){
 					if(doc){
-						callback(null, Utils.cleanDoc(doc));
+						callback(null, doc);
 					}else{
 						callback(Boom.notFound('token not found'), null);
 					}
@@ -76,15 +77,16 @@ module.exports = {
 
 	// remove token from collection using accessToken
 	remove: function(options, callback){
+		var self = this;
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
-				db.collection('tokens').findAndRemove( this.buildQuery(options), function(err, doc) {
+				db.collection('tokens').findAndRemove( self.buildQuery(options), function(err, doc) {
 					if(!doc){
 						callback(Boom.notFound('token not found', err), null);
 					}else{
-						callback(err, Utils.cleanDoc(doc));	
+						callback(err, doc);	
 					}
 				});
 			}

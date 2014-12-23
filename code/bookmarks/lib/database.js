@@ -5,7 +5,7 @@
 var Url       = require('url'),
     Mongodb   = require('mongodb'),
     Joi       = require('joi'),
-    Boom      = required('boom')
+    Boom      = require('boom'),
     Hoek      = require('hoek');
 
 
@@ -15,7 +15,7 @@ var connectionInstance = null,
     optionsSchema;
 
 
-// simple schema for options
+// schema for options
 // http://mongodb.github.io/node-mongodb-native/1.4/driver-articles/mongoclient.html#mongoclient-connect
 optionsSchema = Joi.object().keys({
   url: Joi.string().required(),

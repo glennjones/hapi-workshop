@@ -49,14 +49,22 @@ module.exports = {
 		},
 
 
-		cleanDoc: function(doc){
-			if(this.isArray(doc)){
-				doc = doc[0];
+		cleanDocs: function(docs){
+			var out = [];
+			if(!this.isArray(docs)){
+				out[0] = docs;
+			}else{
+				out = docs;
 			}
-			delete doc._id;
-			delete doc.__v;
-			doc = this.clone( doc );
-			return doc
+
+			var i = out.length;
+			while (i--) {
+				delete out[0].password;
+				delete out[0]._id;
+				delete out[0].__v;
+				out[0] = this.clone( out[0] );
+			}
+			return out
 		},
 
 

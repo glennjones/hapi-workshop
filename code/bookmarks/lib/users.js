@@ -7,13 +7,14 @@ var Url 		= require('url'),
 	Boom 		= require('boom'),
 	Bcrypt  	= require('bcrypt-nodejs'),
 	ShortId 	= require('shortid'),
-	Config    	= require('../lib/config-manager.js'),
-	Database 	= require('../lib/database.js'),
-	Tokens      = require('../lib/tokens.js').Tokens,
-	Utils 		= require('../lib/utilities.js');
+	Config    	= require('./config-manager.js'),
+	Database 	= require('./database.js'),
+	Tokens      = require('./tokens.js'),
+	Utils 		= require('./utilities.js');
 	
 
 var dbOptions = {'url': Config.database.url};
+
 
 /*user structure
 {
@@ -35,7 +36,7 @@ module.exports = {
 		var self = this;
 
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
 				self.get({username: options.item.username}, function(err, user){
@@ -68,7 +69,7 @@ module.exports = {
 										}
 									}, function(){})
 
-							      	callback(null, Utils.cleanDoc(doc));
+							      	callback(null, doc);
 							    }
 							});
 						});
@@ -85,7 +86,7 @@ module.exports = {
 		var self = this;
 
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(err, null);
 			}else{
 				self.get(options, function(err, doc){
@@ -127,12 +128,13 @@ module.exports = {
 	// get a single user
 	get: function(options, callback){
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
 				db.collection('users').findOne( {'username': options.username}, function(err, doc){
+					console.log(err, doc)
 					if(doc){
-						callback(null, Utils.cleanDoc(doc));
+						callback(null, doc);
 					}else{
 						callback(Boom.notFound('user not found'), null);
 					}
@@ -176,11 +178,6 @@ module.exports = {
 						if (err) {
 							callback(err, null);
 						}else{
-							var i = docs.length;
-							while (i--) {
-							    docs[i] = Utils.cleanDoc(docs[i]);
-							}
-					
 							callback(null, {
 								'items': docs,
 								'count': count,
@@ -205,8 +202,8 @@ module.exports = {
 					callback(Boom.notFound('user not found', err), null);
 				}else{
 					// remove token for this user
-					self.tokens.remove({owner : options.username}, function(){})
-					callback(err, Utils.cleanDoc(doc));	
+					Tokens.remove({owner : options.username}, function(){})
+					callback(err, doc);	
 				}
 			});
 		});

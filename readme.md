@@ -33,7 +33,7 @@ Expand on these subjects:
 
 Build examples of:
 * Update to v0.8.x of hapi
-* Share-code or singleton pattern in modules
+* ~~Share-code or singleton pattern in modules~~
 * Shared schema's across application layers
 * Using events for middleware
 * Locking endpoints and routes to HTTPS or HTTP

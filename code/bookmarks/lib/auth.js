@@ -3,8 +3,8 @@
 var Hapi    	= require('hapi'),
 	Boom	   	= require('boom'),
     Bcrypt  	= require('bcrypt-nodejs'),
-    Users      	= require('../lib/users.js'),
-    Tokens      = require('../lib/tokens.js');
+    Users      	= require('./users.js'),
+    Tokens      = require('./tokens.js');
 	
 
 

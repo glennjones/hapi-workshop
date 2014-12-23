@@ -6,10 +6,10 @@ var Fs				= require('fs'),
 	Boom            = require('boom'),
 	Joi            	= require('joi'),
 	Bcrypt  		= require('bcrypt-nodejs'),
-	Users      		= require('../lib/users.js'),
-    Tokens      	= require('../lib/tokens.js'),
-    Bookmarks      	= require('../lib/bookmarks.js'),
-	Utils           = require('../lib/utilities.js'),
+	Users      		= require('./users.js'),
+    Tokens      	= require('./tokens.js'),
+    Bookmarks      	= require('./bookmarks.js'),
+	Utils           = require('./utilities.js'),
 	Pack            = require('../package');
 
 
@@ -374,7 +374,7 @@ function removeUser (request, reply) {
 
 // render json out to http stream
 function renderJSON( request, reply, err, result ){
-	if(err){
+	if(err || !result){
 		if( Utils.isString( err ) ){
 			// error without a code are returned as 500
 			reply( Boom.badImplementation(err) );
@@ -382,7 +382,15 @@ function renderJSON( request, reply, err, result ){
 			reply( err );
 		}
 	}else{
-		reply(result).type('application/json; charset=utf-8');
+
+		// remove unwanted properties before returning data
+		if(result.items){
+			result.items = Utils.cleanDocs(result.items);
+		}else{
+			result = Utils.cleanDocs(result);
+		}
+
+		reply(JSON.stringify(result)).type('application/json; charset=utf-8');
 	}
 }
 

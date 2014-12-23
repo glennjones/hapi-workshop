@@ -6,9 +6,9 @@ var Url 		= require('url'),
 	Hoek 		= require('hoek'),
 	Boom 		= require('boom'),
 	ShortId 	= require('shortid'),
-	Config    	= require('../lib/config-manager.js'),
-	Database 	= require('../lib/database.js'),
-	Utils 		= require('../lib/utilities.js');
+	Config    	= require('./config-manager.js'),
+	Database 	= require('./database.js'),
+	Utils 		= require('./utilities.js');
 	
 
 var dbOptions = {'url': Config.database.url};
@@ -20,7 +20,7 @@ module.exports = {
 	add: function (options, callback){
 		var self = this;
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
 				var url;
@@ -38,7 +38,7 @@ module.exports = {
 					    if (err) {
 					    	callback(Boom.badImplementation('Failed to add bookmark to db', err), null);	
 					    } else {
-					      	callback(null, Utils.cleanDoc(doc));
+					      	callback(null, doc);
 					    }
 					});
 
@@ -55,7 +55,7 @@ module.exports = {
 	update: function (options, callback){
 		var self = this;
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
 
@@ -93,12 +93,12 @@ module.exports = {
 	// get a single bookmark
 	get: function(options, callback){
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
 				db.collection('bookmarks').findOne( {'id': options.id}, function(err, doc){
 					if(doc){
-						callback(null, Utils.cleanDoc(doc));
+						callback(null, doc);
 					}else{
 						callback(Boom.notFound('Bookmark not found'), null);
 					}
@@ -128,7 +128,7 @@ module.exports = {
 
 
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
 			// create and fire query
@@ -146,11 +146,6 @@ module.exports = {
 							if (err) {
 								callback(err, null);
 							}else{
-								var i = docs.length;
-								while (i--) {
-								    docs[i] = Utils.cleanDoc(docs[i]);
-								}
-						
 								callback(null, {
 									'items': docs,
 									'count': count,
@@ -170,14 +165,14 @@ module.exports = {
 	// remove bookmark from collection using id
 	remove: function(options, callback){
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
 				db.collection('bookmarks').findAndRemove({'id': options.id}, function(err, doc) {
 					if(!doc){
 						callback(Boom.notFound('Bookmark not found', err), null);
 					}else{
-						callback(err, Utils.cleanDoc(doc));	
+						callback(err, doc);	
 					}
 				});
 			}
@@ -189,7 +184,7 @@ module.exports = {
 	// remove all bookmark from collection
 	removeAll: function(callback){
 		Database.connect(dbOptions, function(err, db){
-			if(err && !db){
+			if(err || !db){
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
 				db.collection('bookmarks').remove({}, function(err, count) {
