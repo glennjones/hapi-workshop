@@ -1,13 +1,13 @@
 {
   "name": "auth-basic",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Eaxmaple auth-basic and hapi.js",
   "main": "app.js",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
-    "hapi": "^7.5.2",
-    "hapi-auth-basic": "^1.1.1",
-    "joi": "^4.9.0"
+    "hapi": "8.0.x",
+    "hapi-auth-basic": "2.0.x",
+    "joi": "5.1.x"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

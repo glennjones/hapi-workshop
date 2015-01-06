@@ -14,8 +14,12 @@ var auth,
     goodOptions = {};
 
 
-// create hapi server object    
-server = Hapi.createServer(Config.server.host, Config.server.port, serverOptions);
+// create server
+server = new Hapi.Server();
+server.connection({ 
+    host: Config.server.host, 
+    port: Config.server.port 
+});
 
 
 // hapi-swagger plug-in options
@@ -37,18 +41,18 @@ goodOptions = {
 
 
 // adds swagger self documentation plugin
-server.pack.register([{
-        plugin: require('hapi-swagger'), 
+server.register([{
+        register: require('hapi-swagger'), 
         options: swaggerOptions
     },{
-        plugin: require('good'),
+        register: require('good'),
         options: goodOptions
     },{
-        plugin: require('hapi-auth-basic')
+        register: require('hapi-auth-basic')
     },{
-        plugin: require('hapi-auth-bearer-token')
+        register: require('hapi-auth-bearer-token')
     },{
-        plugin: require('hapi-auth-cookie')
+        register: require('hapi-auth-cookie')
     }], function (err) {
     if (err) {
         console.error(err);

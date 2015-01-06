@@ -3,19 +3,20 @@ var Hapi            = require('hapi'),
     Boom            = require("boom"),
     Mongo           = require('mongodb'),
     Pack            = require('./package'),
-    Routes          = require('./lib/routes.js'),
-    Config          = require('./lib/config.js');
+    Routes          = require('./lib/routes.js');;
 
 
 var server,
     swaggerOptions,
-    dbOptions,
-    host = (process.env.HOST)? process.env.HOST : 'localhost',
-    port = (process.env.PORT)? parseInt(process.env.PORT, 10) : 3005;
+    dbOptions;
 
 
 // create server
-server = Hapi.createServer(host, port);
+server = new Hapi.Server();
+server.connection({ 
+    host: 'localhost', 
+    port: 3005 
+});
 
 
 swaggerOptions = {
@@ -24,18 +25,17 @@ swaggerOptions = {
 },
 
 
-
 // create options for connection to mongodb
 dbOptions = {
     "url": "mongodb://localhost:27017/bookmarks"
 };
 
 // add hapi-mongodb plug-in
-server.pack.register([{
-    plugin: require('hapi-swagger'), 
+server.register([{
+    register: require('hapi-swagger'), 
     options: swaggerOptions
 },{
-    plugin: require('hapi-mongodb'),
+    register: require('hapi-mongodb'),
     options: dbOptions
 }], function (err) {
     if (err) {

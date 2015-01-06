@@ -12,11 +12,15 @@ var validate = function (token, callback) {
 
 
 // Create a server with a host and port
-var server = new Hapi.Server('localhost', 8000, {});
+var server = new Hapi.Server();
+server.connection({ 
+    host: 'localhost', 
+    port: 8000
+});
 
 
 // Add the bearer-auth plug-in
-server.pack.register(require('hapi-auth-bearer-token'), function (err) {
+server.register(require('hapi-auth-bearer-token'), function (err) {
     server.auth.strategy('bearer', 'bearer-access-token', {
         validateFunc: validate
     });

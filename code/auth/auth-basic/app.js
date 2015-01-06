@@ -31,11 +31,15 @@ var validate = function (username, password, callback) {
 
 
 // Create a server with a host and port
-var server = new Hapi.Server('localhost', 8000);
+var server = new Hapi.Server();
+server.connection({ 
+    host: 'localhost', 
+    port: 8000 
+});
 
 
 // Add the basic-auth plug-in
-server.pack.register(require('hapi-auth-basic'), function (err) {
+server.register(require('hapi-auth-basic'), function (err) {
     server.auth.strategy('simple', 'basic', { validateFunc: validate });
 });
 

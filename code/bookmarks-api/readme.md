@@ -12,7 +12,7 @@ PLEASE NOTE: I am still updating and adding to this example.
 * Bearer token API access
 * Web page templating
 * Swagger auto documentation of API endpoints
-* Mongodb datebase storage
+* Mongodb database storage
 * bcrypt to protect passwords
 * Tests in mocha - unit and server.inject 
 

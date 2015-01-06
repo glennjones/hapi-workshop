@@ -1,5 +1,5 @@
 var Hapi 		= require('hapi'),
-	Mongo           = require('mongodb'),
+	Mongo       = require('mongodb'),
 	Routes    	= require('./lib/routes.js');
 
 // connect to the database;
@@ -19,37 +19,42 @@ Mongo.MongoClient.connect(dbConnectionUrl, {'server': {'auto_reconnect': true}},
 var swaggerOptions = {
 	    basePath: 'http://localhost:3005'
 	},
-	server;
+    server;
 
 function init(){
 
 	Routes.init(db);
 
-	server = Hapi.createServer('localhost', 3005);
+    // Create a server with a host and port
+    server = new Hapi.Server();
+    server.connection({ 
+        host: 'localhost', 
+        port: 3005 
+    });
 
-  	// adds swagger self documentation plugin
-    server.pack.register([{
-            plugin: require('hapi-swagger'), 
+
+    // Add the route
+    server.route(Routes.routes);
+    server.views({
+        path: 'templates',
+        engines: { html: require('handlebars') },
+        partialsPath: './templates/withPartials',
+        helpersPath: './templates/helpers',
+        isCached: false
+    })
+
+    // adds swagger self documentation plugin
+    server.register({
+            register: require('hapi-swagger'), 
             options: swaggerOptions
-        }], function (err) {
-        if (err) {
-            console.error(err);
-        }else{
+        }, function (err) {
+            if (err) {
+                console.log(['error'], 'plugin "hapi-swagger" load error: ' + err) 
+            }
+        });
 
-            // hapi server settings
-            server.route(Routes.routes);
-            server.views({
-                    path: 'templates',
-                    engines: { html: require('handlebars') },
-                    partialsPath: './templates/withPartials',
-                    helpersPath: './templates/helpers',
-                    isCached: false
-                })
-
-            server.start(function(){
-                console.info('Server started at ' + server.info.uri);
-            });
-        }
+    server.start(function(){
+        console.info('server started at ' + server.info.uri);
     });
 
 }

@@ -12,7 +12,11 @@ var server,
 
 
 // create server
-server = Hapi.createServer(Config.server.host, Config.server.port);
+server = new Hapi.Server();
+server.connection({ 
+    host: Config.server.host, 
+    port: Config.server.port 
+});
 
 
 swaggerOptions = {
@@ -21,10 +25,9 @@ swaggerOptions = {
 },
 
 
-
 // add hapi-mongodb plug-in
-server.pack.register([{
-    plugin: require('hapi-swagger'), 
+server.register([{
+    register: require('hapi-swagger'), 
     options: swaggerOptions
 }], function (err) {
     if (err) {

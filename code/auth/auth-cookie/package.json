@@ -1,6 +1,6 @@
 {
   "name": "auth-cookie",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "auth-cookie",
   "main": "app.js",
   "scripts": {
@@ -9,8 +9,8 @@
   "author": "Glenn Jones <glennjonesnet@gmail.com> (http://glennjones.net/)",
   "license": "MIT",
   "dependencies": {
-    "hapi": "7.5.2",
+    "hapi": "8.0.x",
     "bcrypt-nodejs": "0.0.3",
-    "hapi-auth-cookie": "1.4.2"
+    "hapi-auth-cookie": "2.0.x"
   }
 }

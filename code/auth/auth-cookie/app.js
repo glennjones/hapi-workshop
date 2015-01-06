@@ -90,10 +90,15 @@ function validate(session, callback) {
 }
 
 
-var server = new Hapi.Server('localhost', 8000);
+// Create a server with a host and port
+var server = new Hapi.Server();
+server.connection({ 
+    host: 'localhost', 
+    port: 8000 
+});
 
 
-server.pack.register(require('hapi-auth-cookie'), function (err) {
+server.register(require('hapi-auth-cookie'), function (err) {
     server.auth.strategy('session', 'cookie', {
         password: 'secret',
         cookie: 'sid-example',

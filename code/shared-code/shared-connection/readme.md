@@ -1,10 +1,10 @@
-# Shared connection &dash; module based singletons
+# Shared connection - module based singletons
 
-During the workshop a number of people ask about patterns of database connection for Hapi. The original code I used passed a reference which was not the best design pattern. 
+During the workshop a number of people ask about patterns of database connection for Hapi. The original code I used passed a reference, which was not the best design pattern.
 
-This example demostrates the use of nodes modules as a singleton pattern. Modules in node are not ture singletons in the purist understanding, becuase the same file referenecd from different paths you will create more than one object. Also if you use the [cluster](http://nodejs.org/api/cluster.html) feature of node then you will create more than one object. All that said you can practically use modules as singletons if your careful.
+This example demonstrates the use of nodes modules as a singleton pattern. Modules in node are not true singletons in the purist understanding, because the same file referenced from different paths you will create more than one object. Also if you use the cluster feature of node then you will create more than one object. All that said you can practically use modules as singletons if you’re careful.
 
-This is an example showing the use of a singleton to share a MongoDB connection across a HAPI server. It also use the singleton for the config.
+This is an example showing the use of a singleton to share a MongoDB connection across a HAPI server. It also uses the singleton for the config.
 
 ## Run
 1. Download this project
@@ -38,6 +38,6 @@ Then use [robomongo](http://www.robomongo.org/) to create a collection called `u
         ]
     }
     
-Once you have the above in place you should be able to log onto the system at http://localhost:3005 with the account information created.
+Once you have the above in place you should be able to log onto the system at `http://localhost:3005` with the account information created.
 
 

@@ -13,12 +13,12 @@ This is a small example of using a Cookie authentication strategy with [hapi.js]
 To access the content with cookie authentication use the form with username `jane` and the password  `password`. 
 
 ## Notes
-Although the plugin handles the cookie authentication the user is authenticated via other a web form. Although the cookie content is protected by [iron](https://github.com/hueniverse/iron) the password is hash with `bcrypt` for storage.  The `revokingToken` is added to allow the service to invalidate the session without having to have the user change thier password.
+Although the plugin handles the cookie authentication the user is authenticated via other a web form. Although the cookie content is protected by [iron](https://github.com/hueniverse/iron) the password is hash with `bcrypt` for storage.  The `revokingToken` is added to allow the service to invalidate the session without having to have the user change their password.
 
 ## Code
     var Hapi    = require('hapi'),
         Bcrypt  = require('bcrypt-nodejs');
-    
+
     var users = {
         jane: {
             id: 'jane',
@@ -27,8 +27,8 @@ Although the plugin handles the cookie authentication the user is authenticated 
             revokingToken: 'd294b4b6-4d65-4ed8-808e-26954168ff48'
         }
     };
-    
-    
+
+
     var home = function (request, reply) {
         reply('<html><head><title>Login page</title></head><body><h3>Welcome '
           + request.auth.credentials.name
@@ -36,16 +36,16 @@ Although the plugin handles the cookie authentication the user is authenticated 
           + '<input type="submit" value="Logout">'
           + '</form></body></html>');
     };
-    
-    
+
+
     var login = function (request, reply) {
         var message = '',
             account = null;
-    
+
         if (request.auth.isAuthenticated) {
             return reply.redirect('/');
         }
-    
+
         if (request.method === 'post') {
             if (!request.payload.username || !request.payload.password) {
                 message = 'Missing username or password';
@@ -68,19 +68,19 @@ Although the plugin handles the cookie authentication the user is authenticated 
                 return displayLogin(reply, message);
             }
         }
-    
+
         if (request.method === 'get') {
             return displayLogin(reply, '');
         }
     };
-    
-    
+
+
     var logout = function (request, reply) {
         request.auth.session.clear();
         return reply.redirect('/');
     };
-    
-    
+
+
     function displayLogin(reply, message){
          return reply('<html><head><title>Login page</title></head><body>'
             + (message ? '<h3>' + message + '</h3><br/>' : '')
@@ -89,16 +89,16 @@ Although the plugin handles the cookie authentication the user is authenticated 
             + 'Password: <input type="password" name="password"><br/>'
             + '<input type="submit" value="Login"></form></body></html>');
     }
-    
-    
+
+
     function validate(session, callback) {
         var account = users[session.id];
-    
+
         if(account){
             if (session.revokingToken !== account.revokingToken) {
                 return callback(null, false);
             }
-    
+
             Bcrypt.compare(session.password, account.password, function (err, isValid) {
                 callback(null, true, account);
             });
@@ -106,12 +106,17 @@ Although the plugin handles the cookie authentication the user is authenticated 
             return callback(null, false);
         }
     }
-    
-    
-    var server = new Hapi.Server('localhost', 8000);
-    
-    
-    server.pack.register(require('hapi-auth-cookie'), function (err) {
+
+
+    // Create a server with a host and port
+    var server = new Hapi.Server();
+    server.connection({ 
+        host: 'localhost', 
+        port: 8000 
+    });
+
+
+    server.register(require('hapi-auth-cookie'), function (err) {
         server.auth.strategy('session', 'cookie', {
             password: 'secret',
             cookie: 'sid-example',
@@ -119,7 +124,7 @@ Although the plugin handles the cookie authentication the user is authenticated 
             isSecure: false,
             validateFunc: validate
         });
-    
+
         server.route([
             {
                 method: 'GET',
@@ -152,9 +157,10 @@ Although the plugin handles the cookie authentication the user is authenticated 
                 }
             }
         ]);
-    
+
         server.start();
     });
+    
 
 ## Notes
 The `bcrypt-nodejs` module (pure javascript version) was used in the example as its easier to install windows, but you may want to use `bcrypt` in production.

@@ -1,6 +1,6 @@
 {
   "name": "share-connection",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Example of using singleton shared db connection for Async Special: Hapi.js Workshop",
   "author": "Glenn Jones <glennjonesnet@gmail.com> (http://glennjones.net/)",
   "license": "MIT",
@@ -14,10 +14,10 @@
   "dependencies": {
     "boom": "2.6.x",
     "handlebars": "1.3.x",
-    "hapi": "7.5.x",
-    "hapi-swagger": "^0.5.2",
-    "hoek": "2.10.x",
-    "joi": "4.9.x",
+    "hapi": "8.0.x",
+    "hapi-swagger": "0.6.x",
+    "hoek": "2.11.x",
+    "joi": "5.1.x",
     "marked": "^0.3.2",
     "mongodb": "1.2.x",
     "shortid": "^2.1.3"
@@ -27,9 +27,7 @@
   },
   "engines": {
     "node": ">= 0.10.x"
-  },
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/glennjones/hapi-workshop.git"
   }
 }
+
+
