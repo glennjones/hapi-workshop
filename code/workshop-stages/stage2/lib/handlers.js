@@ -19,7 +19,7 @@ function init( db ){
 
 
 function index(request, reply) {
-	reply.view('index.html', {title: 'XXXXXXXXX'});
+	reply.view('index.html', {title: 'Bookmarks'});
 
 }
 

@@ -1,158 +1,139 @@
+var Hapi    = require('hapi'),
+    Bcrypt  = require('bcrypt-nodejs');
 
-
-// Taken from https://github.com/tomsteele/hapi-auth-cookie-example
-
-// Read
-// https://blog.liftsecurity.io/2014/11/26/securing-hapi-client-side-sessions
-// https://hacks.mozilla.org/2012/12/using-secure-client-side-sessions-to-build-simple-and-scalable-node-js-applications-a-node-js-holiday-season-part-3/
-
-
-var Hapi = require('hapi');
-var Dulcimer = require('dulcimer');
-Dulcimer.connect('./test.db');
-
-var User = new Dulcimer.Model({
-    username: {
-        type: 'String'
-    },
-    passwordHash: {
-        type: 'String'
-    },
-    superToken: {
-        type: 'integer'
+var users = {
+    jane: {
+        id: 'jane',
+        password: '$2a$10$XPk.7lupEzBSHxUg/IavSuIKmwmpBbW0NfCL8q0ZfHXUPXTtbhmNK',   // 'password'
+        name: 'Jane Doe',
+        revokingToken: 'd294b4b6-4d65-4ed8-808e-26954168ff48'
     }
-}, {
-    name: 'user'
-});
+};
+
+
+var home = function (request, reply) {
+    reply('<html><head><title>Login page</title></head><body><h3>Welcome '
+      + request.auth.credentials.name
+      + '!</h3><br/><form method="get" action="/logout">'
+      + '<input type="submit" value="Logout">'
+      + '</form></body></html>');
+};
+
+
+var login = function (request, reply) {
+    var message = '',
+        account = null;
+
+    if (request.auth.isAuthenticated) {
+        return reply.redirect('/');
+    }
+
+    if (request.method === 'post') {
+        if (!request.payload.username || !request.payload.password) {
+            message = 'Missing username or password';
+        } else {
+            account = users[request.payload.username];
+            if (account){
+                Bcrypt.compare(request.payload.password, account.password, function (err, isValid) {
+                    if(err || isValid === false){
+                        return displayLogin(reply, 'Invalid username or password')
+                    }else{
+                        request.auth.session.set(account);
+                        return reply.redirect('/');
+                    }
+                });
+            }else{
+                message = 'Invalid username or password';   
+            }
+        }
+        if (message !== '') {
+            return displayLogin(reply, message);
+        }
+    }
+
+    if (request.method === 'get') {
+        return displayLogin(reply, '');
+    }
+};
+
+
+var logout = function (request, reply) {
+    request.auth.session.clear();
+    return reply.redirect('/');
+};
+
+
+function displayLogin(reply, message){
+     return reply('<html><head><title>Login page</title></head><body>'
+        + (message ? '<h3>' + message + '</h3><br/>' : '')
+        + '<form method="post" action="/login">'
+        + 'Username: <input type="text" name="username"><br>'
+        + 'Password: <input type="password" name="password"><br/>'
+        + '<input type="submit" value="Login"></form></body></html>');
+}
+
 
 function validate(session, callback) {
+    var account = users[session.id];
 
-    var foundUser = function (err, user) {
-
-        // If we didn't find the user return isValid=false.
-        if (err || !user) {
+    if(account){
+        if (session.revokingToken !== account.revokingToken) {
             return callback(null, false);
         }
 
-        // Found the user, now make sure the superToken is
-        // valid, if not, return isValid=false.
-        if (session.superToken !== user.superToken) {
-            return callback(null, false);
-        }
-
-        // Everything looks great, isValid=true, and pass
-        // the user to upstream route handlers.
-        return callback(null, true, user);
-    };
-    // Find the user by key.
-    User.get(session.key, foundUser);
+        Bcrypt.compare(session.password, account.password, function (err, isValid) {
+            callback(null, true, account);
+        });
+    }else{
+        return callback(null, false);
+    }
 }
 
 
-// Adds an account for testing.
-function addUser() {
+var server = new Hapi.Server('localhost', 8000);
 
-    User.wipe(function (err) {
-
-        if (err) {
-            process.exit(1);
-        }
-
-        var user = User.create({
-            username: 'lifty',
-            passwordHash: '$2a$10$N7NruJgfoe6p.OcpSxv/8OaJAFbC1pU/AyeOtM8trQwCTj8umJA4q', // password ;)
-            superToken: Date.now()
-        });
-
-        user.save(function (err) {
-
-            if (err) {
-                process.exit(1);
-            }
-
-            console.log('user account created');
-        });
-    });
-}
-
-var server = new Hapi.Server('localhost', '8000');
 
 server.pack.register(require('hapi-auth-cookie'), function (err) {
-
-    addUser();
-
     server.auth.strategy('session', 'cookie', {
-        password: 'a really long secret you generated using crypto',
-        cookie: 'sid',
+        password: 'secret',
+        cookie: 'sid-example',
         redirectTo: '/login',
         isSecure: false,
         validateFunc: validate
-    }, true);
-    server.auth.default('session');
-
-    server.route({
-        path: '/login',
-        method: ['GET', 'POST'],
-        config: {
-            auth: {
-                mode: 'try',
-            },
-            plugins: {
-                'hapi-auth-cookie': {
-                    redirectTo: false
-                }
-            }
-        },
-        handler: function (request, reply) {
-
-            if (request.auth.isAuthenticated) {
-                return reply.redirect('/');
-            }
-
-            if (request.method === 'get') {
-                return reply('<html><body><p>Submit to login</p><form action="/login" method="post"><input type="submit" /></form></body></html>');
-            }
-
-            // Grab the first user to simulate a login.
-            User.all(function (err, user) {
-
-                if (err) {
-                    return reply(err).code(500);
-                }
-
-                request.auth.session.set({
-                    key: user[0].key,
-                    superToken: user[0].superToken
-                });
-                return reply.redirect('/');
-            });
-        }
     });
 
-    server.route({
-        path: '/',
-        method: 'GET',
-        handler: function (request, reply) {
-            return reply('<html><body><p>Submit to revoke all sessions</p><form method="post" action="/revoke-sessions"><input type="submit" /></form></body></html>');
-        }
-    });
-
-    server.route({
-        path: '/revoke-sessions',
-        method: 'POST',
-        handler: function (request, reply) {
-            var user = request.auth.credentials;
-            user.superToken = Date.now();
-            user.save(function (err) {
-
-                if (err) {
-                    return reply().code(500);
+    server.route([
+        {
+            method: 'GET',
+            path: '/',
+            config: {
+                handler: home,
+                auth: 'session'
+            }
+        },{
+            method: ['GET', 'POST'],
+            path: '/login',
+            config: {
+                handler: login,
+                auth: {
+                    mode: 'try',
+                    strategy: 'session'
+                },
+                plugins: {
+                    'hapi-auth-cookie': {
+                        redirectTo: false
+                    }
                 }
-                return reply.redirect('/');
-            });
+            }
+        },{
+            method: 'GET',
+            path: '/logout',
+            config: {
+                handler: logout,
+                auth: 'session'
+            }
         }
-    });
+    ]);
 
-    console.log('Server listening on http://localhost:8000/');
     server.start();
 });

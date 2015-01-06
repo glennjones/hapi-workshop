@@ -9,8 +9,8 @@
   "author": "Glenn Jones <glennjonesnet@gmail.com> (http://glennjones.net/)",
   "license": "MIT",
   "dependencies": {
-    "dulcimer": "2.5.0",
     "hapi": "7.5.2",
+    "bcrypt-nodejs": "0.0.3",
     "hapi-auth-cookie": "1.4.2"
   }
 }

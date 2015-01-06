@@ -6,16 +6,13 @@ var validate = function (token, callback) {
     if(token === "d294b4b6-4d65-4ed8-808e-26954168ff48"){
         callback(null, true, { token: token })
     } else {
-        callback(null, false, { token: token })
+        callback(null, false)
     }
 };
 
 
 // Create a server with a host and port
-var server = new Hapi.Server('localhost', 8000, {
-    cors: true,
-    jsonp: 'callback'
-});
+var server = new Hapi.Server('localhost', 8000, {});
 
 
 // Add the bearer-auth plug-in
