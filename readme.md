@@ -1,6 +1,6 @@
 # hapi-workshop
 
-This project contains the material created for [Async Special - Hapi.js Workshop &ndash; Async](http://asyncjs.com/building-apis-workshop/) on 6th Dec 2014. The examples are still been updated, but should be of use to anyone learning about [hapi](http://hapijs.com/).
+This project contains the material created for [Async Special - Hapi.js Workshop](http://asyncjs.com/building-apis-workshop/) on 6th Dec 2014. The examples are still been updated, but should be of use to anyone learning about [Hapi](http://hapijs.com/).
 
 
 ## Code
@@ -9,6 +9,7 @@ This is a example bookmark API built with hapi. I am still updating and adding t
 * [bookmarks-api (full)](code/bookmarks-api)
 
 There are also the staged builds from the workshop:
+
 1. [bookmarks-api (routes, static assets)](code/workshop-stages/stage1)
 2. [bookmarks-api (templates, handlers, database)](code/workshop-stages/stage2)
 3. [bookmarks-api (plug-ins, documentation)](code/workshop-stages/stage3)
@@ -16,6 +17,7 @@ There are also the staged builds from the workshop:
 
 ### Authentication Examples
 There are 4 simple examples of the use of different authentication strategies.
+
 * [basic](code/auth/auth-basic)
 * [bearer](code/auth/auth-bearer)
 * [cookie (form)](code/auth/auth-cookie)
@@ -24,8 +26,9 @@ There are 4 simple examples of the use of different authentication strategies.
 
 ### Datebase connections
 During the workshop a number of people ask about patterns of database connection for [hapi](http://hapijs.com/). So I have created two examples projects to show approaches. The shared-connection is my favoured approch, but maybe built using promises.
-* [hapi-mongodb](code/shared-code/hapi-mongodb)
+
 * [shared-connection](code/shared-code/shared-connection)
+* [hapi-mongodb](code/shared-code/hapi-mongodb)
 
 
 ## Prerequisites for running code
