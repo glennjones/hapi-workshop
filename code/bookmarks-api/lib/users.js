@@ -132,7 +132,6 @@ module.exports = {
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
 				db.collection('users').findOne( {'username': options.username}, function(err, doc){
-					console.log(err, doc)
 					if(doc){
 						callback(null, doc);
 					}else{

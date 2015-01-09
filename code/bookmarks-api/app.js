@@ -33,7 +33,7 @@ goodOptions = {
     opsInterval: 1000,
     reporters: [{
         reporter: require('good-console'),
-        args:[{ log: '*', request: '*' }]
+        args:[{ log: '*', response: '*' }]
     }]
 };
 
@@ -45,9 +45,6 @@ server.register([{
         register: require('hapi-swagger'), 
         options: swaggerOptions
     },{
-        register: require('good'),
-        options: goodOptions
-    },{
         register: require('hapi-auth-basic')
     },{
         register: require('hapi-auth-bearer-token')
@@ -58,7 +55,7 @@ server.register([{
         console.error(err);
     }else{
 
-        // add auth strategies
+        // add auth strategies, before routes
         server.auth.strategy('basic', 'basic', { validateFunc: Auth.validateBasic});
         server.auth.strategy('bearer', 'bearer-access-token', {validateFunc: Auth.validateBearer});
         server.auth.strategy('cookie', 'cookie', {
@@ -79,6 +76,13 @@ server.register([{
                 helpersPath: './templates/helpers',
                 isCached: false
             })
+
+        // add good after routes
+        server.register([{
+                register: require('good'),
+                options: goodOptions
+            }], function (err) {});
+
 
         server.start(function(){
             console.info('Server started at ' + server.info.uri);

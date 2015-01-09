@@ -83,7 +83,7 @@ describe('utilities -', function(){
 	});
 
 
-	it('cleanDoc', function(done){
+	it('cleanDocs', function(done){
 		var result,
 			doc = {
 				str: 'test',
@@ -91,7 +91,7 @@ describe('utilities -', function(){
 				__v: 'test'
 			};
 
-		result = Utils.cleanDoc(doc)
+		result = Utils.cleanDocs(doc)
 		assert.deepEqual( {str: 'test'}, result );
         done();
 	});

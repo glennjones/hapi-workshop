@@ -51,6 +51,16 @@ Then use [robomongo](http://www.robomongo.org/) to create a collection called `u
     
 Once you have the above in place you should be able to log onto the system at http://localhost:3005 with the account information created. Try the admin URL
 http://localhost:3005/admin
+
+
+### Mocha test
+The project has a small number integration and unit tests. To run the test within the project type the following command.
+
+    $ NODE_ENV=test mocha --reporter list
+
+
+
+
     
 
 

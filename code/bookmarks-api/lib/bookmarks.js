@@ -34,11 +34,11 @@ module.exports = {
 				if( url ){
 
 					options.item.host = url.host;
-					db.collection('bookmarks').insert(options.item, { safe: true }, function (err, doc) {
-					    if (err) {
+					db.collection('bookmarks').insert(options.item, { safe: true }, function (err, docs) {
+					    if (err || !docs) {
 					    	callback(Boom.badImplementation('Failed to add bookmark to db', err), null);	
 					    } else {
-					      	callback(null, doc);
+					      	callback(null, docs[0]);
 					    }
 					});
 
@@ -188,7 +188,6 @@ module.exports = {
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
 			}else{
 				db.collection('bookmarks').remove({}, function(err, count) {
-					console.log(err, count)
 					callback(err, count);
 				});
 			}

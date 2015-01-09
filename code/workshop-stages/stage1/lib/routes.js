@@ -1,10 +1,8 @@
 'use strict';
 var hapi        = require('hapi'),
-    Joi         = require('joi'),
-    handlers    = require('../lib/handlers.js'),
-    routes,
+    Joi         = require('joi');
         
-routes =[{
+module.exports = [{
 	    method: 'GET',
 	    path: '/hello',
 	    handler: function (request, reply) {
@@ -24,4 +22,3 @@ routes =[{
 	},]
 
 
-exports.routes = routes;

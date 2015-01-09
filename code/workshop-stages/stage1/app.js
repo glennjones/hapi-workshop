@@ -9,7 +9,7 @@ server.connection({
 });
 
 // Add the route
-server.route(Routes.routes);
+server.route(Routes);
 
 // Start the server
 server.start();

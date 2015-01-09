@@ -1,0 +1,21 @@
+{
+  "name": "good",
+  "version": "0.1.0",
+  "description": "Eaxmaple of logging requests with good",
+  "main": "app.js",
+  "dependencies": {
+    "hapi": "8.0.x",
+    "good": "5.1.x",
+    "good-console": "4.1.x",
+    "joi": "5.1.x"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "auth",
+    "basic"
+  ],
+  "author": "Glenn Jones <glennjonesnet@gmail.com> (http://glennjones.net/)",
+  "license": "MIT"
+}

@@ -60,7 +60,6 @@ module.exports = {
 
 	// validation function for cookie strategy
 	validateCookie: function(session, callback) {
-		console.log(session);
 
 		Users.get({username: session.username}, function(err, user){
 			if(err || !user){

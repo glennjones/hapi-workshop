@@ -4,7 +4,7 @@ This project contains the material created for [Async Special - Hapi.js Workshop
 
 
 ## Code
-### API Examples
+### API 
 This is a example bookmark API built with hapi. I am still updating and adding to this example.
 * [bookmarks-api (full)](code/bookmarks-api)
 
@@ -15,20 +15,31 @@ There are also the staged builds from the workshop:
 3. [bookmarks-api (plug-ins, documentation)](code/workshop-stages/stage3)
 
 
-### Authentication Examples
+
+
+
+### Authentication examples
 There are 4 simple examples of the use of different authentication strategies.
 
-* [basic](code/auth/auth-basic)
-* [bearer](code/auth/auth-bearer)
-* [cookie (form)](code/auth/auth-cookie)
-* [mixed (bearer and basic)](code/auth/auth-mixed)
+* [basic](code/authentication/auth-basic)
+* [bearer](code/authentication/auth-bearer)
+* [cookie (form)](code/authentication/auth-cookie)
+* [mixed (bearer and basic)](code/authentication/auth-mixed)
 
 
-### Datebase connections
+### Datebase connections examples
 During the workshop a number of people ask about patterns of database connection for [hapi](http://hapijs.com/). So I have created two examples projects to show approaches. The shared-connection is my favoured approch, but maybe built using promises.
 
-* [shared-connection](code/shared-code/shared-connection)
-* [hapi-mongodb](code/shared-code/hapi-mongodb)
+* [shared-connection](code/database/shared-connection)
+* [hapi-mongodb](code/database/hapi-mongodb)
+
+
+### Logging examples
+During the workshop I showed logging of requests information using uses the [good](https://github.com/hapijs/good) and [good-console](https://github.com/hapijs/good-console) plug-ins.  I have created simple examples of how to add these plug-ins to your project.
+
+* [console logging](code/logging/good)
+
+
 
 
 ## Prerequisites for running code
@@ -51,13 +62,14 @@ Expand on these subjects:
 * Deploying app
 
 Build examples of:
-* Update to v0.8.x of hapi
+* ~~Update to v0.8.x of hapi~~
 * ~~Share-code or singleton pattern in modules~~
 * Shared schema's across application layers
 * Using events for middleware
 * Locking endpoints and routes to HTTPS or HTTP
 * Update whole project with promises
 
+    
 
 ## This is a work in progress
-If you find any issue please file here on github and I will try and fix them.
+If you find any issue please file here on github and I will try and fix them. If you are considering sending a pull request please add tests for the functionality you add or change.

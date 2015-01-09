@@ -46,7 +46,7 @@ function admin(request, reply) {
 		out.user = request.auth.credentials.user;
 		out.strategy = request.auth.strategy
 	}
-	console.log(out)
+	
 
 	if(out.user.groups && out.user.groups.indexOf('admin') > -1){
 		reply.view('admin.html', out);

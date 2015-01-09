@@ -2,17 +2,15 @@
 
 // Example of integration tests - module and database together
 
-var Mongo       = require('mongodb'),
-	Chai		= require('chai'),
-	Bookmarks   = require('../lib/bookmarks').Bookmarks;
+var Chai		= require('chai'),
+	Bookmarks   = require('../lib/bookmarks');
 
 
 var assert = Chai.assert;
 
 
 describe('bookmarks -', function(){
-	var bookmarks,
-		currentId,
+	var currentId,
 		newDoc = {
 				item: {
 					url: 'http://example.com',
@@ -30,25 +28,9 @@ describe('bookmarks -', function(){
 		}
 
 
-	// setup test database;
-    before(function(done) {
-		Mongo.MongoClient.connect('mongodb://localhost:27017/bookmarks-test', {'server': {'auto_reconnect': true}}, function (err, db) {
-		  if (err) {
-		    console.log(['error', 'database', 'connection'], err);
-		    done();
-		  }else{
-		    bookmarks = new Bookmarks( db );
-		    bookmarks.removeAll(function(){});
-		    done();
-		  }
-		});
-    });
-
-
 
 	it('add a bookmark', function(done){
-		bookmarks.add(newDoc, function(err, doc){
-
+		Bookmarks.add(newDoc, function(err, doc){
 			currentId = doc.id;
 
 			assert.equal( err, null );
@@ -65,7 +47,7 @@ describe('bookmarks -', function(){
 		var options = {
 			id: currentId,
 		};
-		bookmarks.get( options, function(err, doc){
+		Bookmarks.get( options, function(err, doc){
 			assert.equal(err, null);
 			assert.ok(doc.created);
 			assert.ok(doc.modified);
@@ -81,7 +63,7 @@ describe('bookmarks -', function(){
 			page: 1,
 			pageSize: 20
 		};
-		bookmarks.find(options, function(err, docs){
+		Bookmarks.find(options, function(err, docs){
 			assert.equal(err, null);
 			assert.ok(docs);
 			assert.equal(docs.items.length, 1);
@@ -102,7 +84,7 @@ describe('bookmarks -', function(){
 
 	it('find a bookmark without sending pageing options', function(done){
 		var options = {};
-		bookmarks.find(options, function(err, docs){
+		Bookmarks.find(options, function(err, docs){
 			assert.equal(err, null);
 			assert.ok(docs);
 			assert.equal(docs.items.length, 1);
@@ -126,7 +108,7 @@ describe('bookmarks -', function(){
 				description: 'Description of example page 2'
 			}
 		};
-		bookmarks.update(options, function(err, doc){
+		Bookmarks.update(options, function(err, doc){
 			assert.equal(err, null);
 			assert.equal(doc.url, 'http://example.com/2');
 			assert.equal(doc.title, 'Example title 2');
@@ -145,7 +127,7 @@ describe('bookmarks -', function(){
 		var options = {
 			id: currentId
 		};
-		bookmarks.remove(options, function(err, doc){
+		Bookmarks.remove(options, function(err, doc){
 			assert.equal(err, null);
 			assert.equal(doc.id, currentId);
 			done();
@@ -161,6 +143,7 @@ function removeUnknownProps(doc){
 	delete doc.created;
 	delete doc.modified;
 	delete doc.id;
+	delete doc._id
 	return doc
 }
 

@@ -59,12 +59,12 @@ module.exports = {
 
 			var i = out.length;
 			while (i--) {
-				delete out[0].password;
-				delete out[0]._id;
-				delete out[0].__v;
-				out[0] = this.clone( out[0] );
+				delete out[i].password;
+				delete out[i]._id;
+				delete out[i].__v;
+				out[i] = this.clone( out[i] );
 			}
-			return out
+			return (this.isArray(docs))? out : out[0];
 		},
 
 
