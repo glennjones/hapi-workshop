@@ -1,4 +1,4 @@
-# About
+# hapi-mongodb example
 
 This is an example showing the use of the [hapi-mongodb](https://github.com/Marsup/hapi-mongodb) plugin to share a MongoDB connection across a HAPI server. 
 
@@ -22,7 +22,7 @@ This pattern works well if the ```handler``` function also calls the for data fr
 
 To demostrate this, take a look at the code for **GET bookmarks** API endpoint. The MongoDB db connection is created in the ```app.js``` file using ```server.pack.register```. The reference to the db called in the ```handler.js``` file using ```request.server.plugins['hapi-mongodb'].db```.
 
-## Indirect use of hapi-mongodb plug-in where connection is passed into data access layer
+## Indirect use of hapi-mongodb plug-in where connection is passed into model/data access layer
 Within the example I also built the ```bookmark.js``` and ```user.js``` as a abstracted data access layers. When you separte out your larger applications this way ```hapi-mongodb``` may not be your best choice of proving shared connection. 
 
     // examples of indirect use of hapi-mongodb plug-in

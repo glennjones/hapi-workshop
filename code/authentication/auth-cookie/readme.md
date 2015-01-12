@@ -1,4 +1,4 @@
-# Cookie Authentication Example
+# Cookie authentication example
 
 This is a small example of using a Cookie authentication strategy with [hapi.js](http://hapijs.com/). It uses the [hapi-auth-cookie/](https://github.com/hapijs/hapi-auth-cookie/) plug-in
 

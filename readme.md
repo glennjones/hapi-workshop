@@ -2,6 +2,8 @@
 
 This project contains the material created for [Async Special - Hapi.js Workshop](http://asyncjs.com/building-apis-workshop/) on 6th Dec 2014. The examples are still been updated, but should be of use to anyone learning about [Hapi](http://hapijs.com/).
 
+[POST EVENT UPDATE](https://rawgit.com/glennjones/hapi-workshop/master/docs/posteventupdate.html) 
+
 
 ## Code
 ### API 
@@ -13,8 +15,6 @@ There are also the staged builds from the workshop:
 1. [bookmarks-api (routes, static assets)](code/workshop-stages/stage1)
 2. [bookmarks-api (templates, handlers, database)](code/workshop-stages/stage2)
 3. [bookmarks-api (plug-ins, documentation)](code/workshop-stages/stage3)
-
-
 
 
 
@@ -30,16 +30,14 @@ There are 4 simple examples of the use of different authentication strategies.
 ### Datebase connections examples
 During the workshop a number of people ask about patterns of database connection for [hapi](http://hapijs.com/). So I have created two examples projects to show approaches. The shared-connection is my favoured approch, but maybe built using promises.
 
-* [shared-connection](code/database/shared-connection)
-* [hapi-mongodb](code/database/hapi-mongodb)
+* [shared database connection, built as singleton](code/database/shared-connection)
+* [use of hapi-mongodb to share a database connection](code/database/hapi-mongodb)
 
 
 ### Logging examples
 During the workshop I showed logging of requests information using uses the [good](https://github.com/hapijs/good) and [good-console](https://github.com/hapijs/good-console) plug-ins.  I have created simple examples of how to add these plug-ins to your project.
 
 * [console logging](code/logging/good)
-
-
 
 
 ## Prerequisites for running code
@@ -56,16 +54,16 @@ I started writing some workshop notes, but did not finnsh them in time for the w
 ## TODO list
 Expand on these subjects:
 * ~~Share-code or singleton pattern in modules~~
-* Middleware and [hapi](http://hapijs.com/)
-* Export vs module.exports
+* ~~Middleware and [hapi](http://hapijs.com/)~~
+* ~~Export vs module.exports~~
 * The importants of HTTPS
 * Deploying app
 
 Build examples of:
 * ~~Update to v0.8.x of hapi~~
 * ~~Share-code or singleton pattern in modules~~
-* Shared schema's across application layers
-* Using events for middleware
+* ~~Shared schema's across application layers~~
+* ~~Using server.ext events for middleware like functionally~~
 * Locking endpoints and routes to HTTPS or HTTP
 * Update whole project with promises
 

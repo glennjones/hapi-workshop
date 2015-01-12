@@ -1,0 +1,19 @@
+{
+  "name": "serverext",
+  "version": "0.1.0",
+  "description": "Eaxmaple of using server.ext",
+  "main": "app.js",
+  "dependencies": {
+    "hapi": "8.0.x",
+    "joi": "5.1.x"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "auth",
+    "basic"
+  ],
+  "author": "Glenn Jones <glennjonesnet@gmail.com> (http://glennjones.net/)",
+  "license": "MIT"
+}

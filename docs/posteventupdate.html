@@ -1,0 +1,186 @@
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8">
+
+    <title>Note</title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes"> 
+    <meta name="viewport" content="initial-scale=1" >
+
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    
+
+    <style>
+      body {
+        padding: 2em;
+        font-family: Lato, "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+        font-size: 1.20000em;
+        font-weight: 400;
+        color: #333333;
+
+      }
+
+      article{
+        max-width: 35em;
+        margin: 0 auto; 
+      }
+
+      code{
+        padding: .2rem .33rem;
+        color: #6f6f6f;
+        background-color: #f3f3f3;
+      }
+
+      a {
+        color: #33a0e8;
+        text-decoration: none;
+      }
+
+      a:hover, a:active {
+        color: #fc0599;
+        text-decoration: none;
+      }
+
+      p{
+        margin-top: 0;
+        line-height: 1.62500em;
+      }
+
+      ul, ol{
+        line-height: 1.62500em;
+      }
+
+      h1{
+        font-size: 2em;
+      }
+
+      h2{
+        margin-top: 3em;
+        margin-bottom: 0;
+      }
+
+
+      h3{
+        margin-top: 3em;
+        margin-bottom: 0;
+      }
+
+
+    </style>
+
+
+
+  </head>
+
+  <body>
+
+    <article class="h-entry">
+
+      <h1 class="p-name">Async Special:</br> Hapi.js Workshop - Post Event Update:</h1>
+
+      <div class="e-content">
+
+        
+        <p>This document covers code example updates since the event and answers some questions I did not have time to cover.<p>
+
+        <ul>
+         <li><a href="#update">Code update to Hapi v0.8.x</a></li>
+         <li><a href="#bookmark">Bookmark-api example update</a></li>
+         <li><a href="#singleton">Singleton’s and database connections</a></li>
+         <li><a href="#exports">Using <code>module.exports</code></a></li>
+         <li><a href="#server-ext">Middleware and Hapi <code>server.ext</code></a></li>
+         <li><a href="#server-inject">Using <code>server.inject</code> with your app</a></li>
+         <li><a href="#examples">Examples of authentication and logging</a></li>
+         <li><a href="#https">The importance of HTTPS</a></li>
+        </ul>
+
+
+        <section id="update">
+          <h2>Code update to Hapi v0.8.x</h2>
+          <p>All the examples we used during the workshop are now in Hapi v0.8.x as promised.  You can find them at: <a href="https://github.com/glennjones/hapi-workshop">https://github.com/glennjones/hapi-workshop</a>. The Hapi team always provide clear release notes with all the breaking changes i.e. <a href="https://github.com/hapijs/hapi/issues/2186">https://github.com/hapijs/hapi/issues/2186</a>. In this case the main impact to our code was on how plug-ins are registered.</p> 
+        </section>
+
+
+        <section id="bookmark">
+          <h2>Bookmark-api architecture changes</h2>
+          <p>There were a number of comments made about the architecture of the example code, which I have tried to address. I have updated the example with the following: </p> 
+
+          <ul>
+           <li>Shared database connection, built as a singleton</li>
+           <li>Configuration manager, built as a singleton that allows for different environment settings</li>
+           <li>Uses of <code>module.exports</code></li>
+          </ul>
+
+          <p>I am going to keep updating this example making it more sophisticated over the next few months. If you’re interested please <a href="https://github.com/glennjones/hapi-workshop/subscription">watch the repo</a> to keep updated.</p> 
+        </section>
+
+
+        <section id="singleton">
+          <h2>Singleton’s and database connections</h2>  
+          <p>During the workshop a number of people asked about different patterns to share the database connection when using Hapi. The way I originally passed a reference was not the most elegant solution. So I have created two example projects to show the different approaches. The &quot;shared database connection&quot; using a singleton is my favoured approach. Someone refactored the code on the day to use a pattern like this. The <code>hapi-mongodb</code> plug-in is also a good solution, but does not provide the same level of abstraction for larger projects.<p>
+
+            <ul>
+           <li><a href="https://github.com/glennjones/hapi-workshop/tree/master/code/database/shared-connection">Shared database connection, built as a singleton</a></li>
+           <li><a href="https://github.com/glennjones/hapi-workshop/tree/master/code/database/hapi-mongodb">Uses of <code>hapi-mongodb</code> to share a database connection</a></li>
+          </ul>
+        </section>
+
+
+        <section id="exports">
+          <h2>Using <code>module.exports</code></h2>  
+          <p>In the original code there were some sloppy uses of <code>exports</code> which meant I had references to objects in modules such as <code>server.route(Routes.routes);</code>. I have now corrected this by using <code>module.exports</code> in the routes.js.<p>
+        </section>
+
+
+        <section id="server-ext">
+          <h2>Middleware and Hapi <code>server.ext</code></h2>
+          <p>Hapi does not have the concept of middleware like Express. In the blog post <a href="http://hueniverse.com/2012/12/20/hapi-a-prologue/">http://hueniverse.com/2012/12/20/hapi-a-prologue/</a> Eran Hammer wrote about some of the reasons his team found middleware in Express to be problematic and why it’s not in Hapi.  That said if you are looking for some way of adding functionally during the request flow Hapi does have <code>server.ext</code>. I have written a small example of adding <code>X-API-VERSION</code> headers to every request. I would recommend wrapping <code>server.ext</code> based functionally into plug-ins.</p>  
+
+          <ul>
+           <li><a href="https://github.com/glennjones/hapi-workshop/tree/master/code/serverext">server.ext example</a></li>
+          </ul>
+        </section>
+
+
+       <section id="server-inject">
+          <h2>Using <code>server.inject</code> within your app</h2>
+          <p>At the end of the workshop Remy Sharp asked me about using <code>server.inject</code> from within the app to access functionality. If you remember <code>server.inject</code> <em>simulating an incoming HTTP request without making an actual connection</em>. This would give you exactly the same functionality internally as someone making a HTTP request from outside your app. Although this approach is good for features like testing and grouping multiple requests together, it can add a bit of complexity. You may have to create HTTP like security context to authenticate a request. You should also consider accessing the functionality directly from the model/data access layer of the app as an alternative to using <code>server.inject</code>. If you do want to use <code>server.inject</code> this way, take a look at how it is used in <a href="https://github.com/hapijs/bassmaster">https://github.com/hapijs/bassmaster</a><p>
+
+          <p>If you want to create one project as both a web based API and a module for reuse in other code take a look at my <a href="https://github.com/transmat/text-autolinker">text-autolinker</a> project. The lib/interfaces.js file allows this type of dual use.</p>  
+        </section>
+
+
+        <section id="examples">
+          <h2>Examples of authentication and logging</h2>
+          <p>If you want to learn about using the authentication or logging plug-ins I was showing you in the workshop, I have created a small example project for each.</p> 
+          <ul>
+           <li><a href="https://github.com/glennjones/hapi-workshop/tree/master/code/authentication/auth-basic">auth-basic</a></li>
+           <li><a href="https://github.com/glennjones/hapi-workshop/tree/master/code/authentication/auth-bearer">auth-bearer</a></li>
+           <li><a href="https://github.com/glennjones/hapi-workshop/tree/master/code/authentication/auth-cookie">auth-cookie</a></li>
+           <li><a href="https://github.com/glennjones/hapi-workshop/tree/master/code/authentication/auth-cookie">auth-mixed</a></li>
+           <li><a href="https://github.com/glennjones/hapi-workshop/tree/master/code/logging/good">good</a></li>
+          </ul>
+        </section>
+
+
+
+        <section id="https">
+          <h2>The importance of HTTPS</h2>
+
+          <p>While I spent sometime talking to you about how to setup and use bearer tokens and other types of authentication, I ran out of time to add the important message about using HTTPS for your API. Please think carefully about <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">man in the middle attacks</a> and add HTTPS or other encryption to your site. If you do enforce HTTPS please also check it’s configured correctly using sites such as <a href="https://www.ssllabs.com/ssltest/">https://www.ssllabs.com/ssltest/</a></p>  
+
+        </section>
+       
+
+      </div>  
+    </article>
+
+
+  </body> 
+
+</html>
+
+

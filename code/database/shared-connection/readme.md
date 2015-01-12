@@ -1,4 +1,4 @@
-# Shared connection - module based singletons
+# Shared connection example - module based singletons
 
 During the workshop a number of people ask about patterns of database connection for Hapi. The original code I used passed a reference, which was not the best design pattern.
 

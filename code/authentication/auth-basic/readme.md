@@ -1,4 +1,4 @@
-# Basic Authentication Example
+# Basic authentication example
 
 This is a simple example of using [HTTP basic authentication](http://en.wikipedia.org/wiki/Basic_access_authentication) strategy with [hapi.js](http://hapijs.com/). It uses the [hapi-auth-basic](https://github.com/hapijs/hapi-auth-basic) plug-in
 

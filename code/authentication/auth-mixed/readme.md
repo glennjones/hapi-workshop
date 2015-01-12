@@ -1,4 +1,4 @@
-# Mixed Authentication Example
+# Mixed authentication example
 
 This is a small example of using a mixed authentication strategy with [hapi.js](http://hapijs.com/). The example creates access control either through HTTP Basic or using a Bearer Token. The two plugins used to provide the authentication straties are:
 

@@ -1,4 +1,4 @@
-# Good Logging Example
+# Good logging example
 
 This is a simple example of console logging request data. It uses the [good](https://github.com/hapijs/good) and [good-console](https://github.com/hapijs/good-console) plug-ins.
 
