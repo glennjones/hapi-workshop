@@ -1,17 +1,18 @@
-
 'use strict';
 //	data access layer for tokens
 
-var Url 		= require('url'),
-	Hoek 		= require('hoek'),
-	Boom 		= require('boom'),
-	Randtoken 	= require('rand-token'),
-	Config    	= require('./config-manager.js'),
-	Database 	= require('./database.js'),
-	Utils 		= require('./utilities.js');
-	
+var Url				= require('url'),
+	Hoek			= require('hoek'),
+	Boom			= require('boom'),
+	Randtoken		= require('rand-token'),
+	Config			= require('./config-manager.js'),
+	Database		= require('./database.js'),
+	Utils			= require('./utilities.js');
 
-var dbOptions = {'url': Config.database.url},
+
+var dbOptions = {
+		'url': Config.database.url
+	},
 	expiresIn = 31536000; // one year of seconds
 
 /*token structure
@@ -28,28 +29,30 @@ var dbOptions = {'url': Config.database.url},
 
 
 
-module.exports =  {
+module.exports = {
 
 	// adds a new token
-	add: function (options, callback){
-		Database.connect(dbOptions, function(err, db){
-			if(err || !db){
+	add: function(options, callback) {
+		Database.connect(dbOptions, function(err, db) {
+			if (err || !db) {
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
-			}else{
+			} else {
 				var url;
 
-				options.item.accessToken = Randtoken.generate(32);;
-				options.item.refreshToken = Randtoken.generate(32);;
+				options.item.accessToken = Randtoken.generate(32);
+				options.item.refreshToken = Randtoken.generate(32);
 				options.item.created = new Date();
 				options.item.modified = new Date();
-				options.item.expires = Math.floor(Date.now()/1000) + expiresIn;
+				options.item.expires = Math.floor(Date.now() / 1000) + expiresIn;
 
-				db.collection('tokens').insert(options.item, { safe: true }, function (err, doc) {
-				    if (err) {
-				    	callback(Boom.badImplementation('Failed to add token to db', err), null);	
-				    } else {
-				      	callback(null, doc);
-				    }
+				db.collection('tokens').insert(options.item, {
+					safe: true
+				}, function(err, doc) {
+					if (err) {
+						callback(Boom.badImplementation('Failed to add token to db', err), null);
+					} else {
+						callback(null, doc);
+					}
 				});
 			}
 		});
@@ -57,16 +60,16 @@ module.exports =  {
 
 
 	// get a single token
-	get: function(options, callback){
+	get: function(options, callback) {
 		var self = this;
-		Database.connect(dbOptions, function(err, db){
-			if(err || !db){
+		Database.connect(dbOptions, function(err, db) {
+			if (err || !db) {
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
-			}else{
-				db.collection('tokens').findOne( self.buildQuery(options), function(err, doc){
-					if(doc){
+			} else {
+				db.collection('tokens').findOne(self.buildQuery(options), function(err, doc) {
+					if (doc) {
 						callback(null, doc);
-					}else{
+					} else {
 						callback(Boom.notFound('token not found'), null);
 					}
 				});
@@ -76,17 +79,17 @@ module.exports =  {
 
 
 	// remove token from collection using accessToken
-	remove: function(options, callback){
+	remove: function(options, callback) {
 		var self = this;
-		Database.connect(dbOptions, function(err, db){
-			if(err || !db){
+		Database.connect(dbOptions, function(err, db) {
+			if (err || !db) {
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
-			}else{
-				db.collection('tokens').findAndRemove( self.buildQuery(options), function(err, doc) {
-					if(!doc){
+			} else {
+				db.collection('tokens').findAndRemove(self.buildQuery(options), function(err, doc) {
+					if (!doc) {
 						callback(Boom.notFound('token not found', err), null);
-					}else{
-						callback(err, doc);	
+					} else {
+						callback(err, doc);
 					}
 				});
 			}
@@ -95,17 +98,19 @@ module.exports =  {
 
 
 	// build query either by token or username
-	buildQuery: function(options){
-		var query = {}
-		if(options.accessToken){
-			query = {'accessToken': options.accessToken}
+	buildQuery: function(options) {
+		var query = {};
+		if (options.accessToken) {
+			query = {
+				'accessToken': options.accessToken
+			};
 		}
-		if(options.owner){
-			query = {'owner': options.owner}
+		if (options.owner) {
+			query = {
+				'owner': options.owner
+			};
 		}
 		return query;
 	}
 
 };
-
-

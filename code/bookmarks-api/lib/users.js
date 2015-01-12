@@ -1,19 +1,20 @@
-
 'use strict';
 //	data access layer for users
 
-var Url 		= require('url'),
-	Hoek 		= require('hoek'),
-	Boom 		= require('boom'),
-	Bcrypt  	= require('bcrypt-nodejs'),
-	ShortId 	= require('shortid'),
-	Config    	= require('./config-manager.js'),
-	Database 	= require('./database.js'),
-	Tokens      = require('./tokens.js'),
-	Utils 		= require('./utilities.js');
-	
+var Url				= require('url'),
+	Hoek			= require('hoek'),
+	Boom			= require('boom'),
+	Bcrypt			= require('bcrypt-nodejs'),
+	ShortId			= require('shortid'),
+	Config			= require('./config-manager.js'),
+	Database		= require('./database.js'),
+	Tokens			= require('./tokens.js'),
+	Utils			= require('./utilities.js');
 
-var dbOptions = {'url': Config.database.url};
+
+var dbOptions = {
+	'url': Config.database.url
+};
 
 
 /*user structure
@@ -32,45 +33,49 @@ var dbOptions = {'url': Config.database.url};
 module.exports = {
 
 	// adds a new user
-	add: function (options, callback){
+	add: function(options, callback) {
 		var self = this;
 
-		Database.connect(dbOptions, function(err, db){
-			if(err || !db){
+		Database.connect(dbOptions, function(err, db) {
+			if (err || !db) {
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
-			}else{
-				self.get({username: options.item.username}, function(err, user){
-					if(!err && user){
-						callback('User already exists', null);	
-					}else{
+			} else {
+				self.get({
+					username: options.item.username
+				}, function(err, user) {
+					if (!err && user) {
+						callback('User already exists', null);
+					} else {
 						options.item.created = new Date();
 						options.item.modified = new Date();
 						options.item.revokeToken = ShortId.generate();
 
-						if(!options.item.groups){
-							options.item.groups = ['user']
+						if (!options.item.groups) {
+							options.item.groups = ['user'];
 						}
 
 						// hash the password so its unreadable
-						Bcrypt.hash(options.item.password, null, null, function (err, hash) {
+						Bcrypt.hash(options.item.password, null, null, function(err, hash) {
 							options.item.password = hash;
 
 							// add user
-							db.collection('users').insert(options.item, { safe: true }, function (err, doc) {
-							    if (err) {
-							    	callback(Boom.badImplementation('Failed to add user to db', err), null);	
-							    } else {
+							db.collection('users').insert(options.item, {
+								safe: true
+							}, function(err, doc) {
+								if (err) {
+									callback(Boom.badImplementation('Failed to add user to db', err), null);
+								} else {
 
 									// add token for this user
 									Tokens.add({
-											item: {
-												owner : options.item.username,
-						    					scope : '',
+										item: {
+											owner: options.item.username,
+											scope: '',
 										}
-									}, function(){})
+									}, function() {});
 
-							      	callback(null, doc);
-							    }
+									callback(null, doc);
+								}
 							});
 						});
 					}
@@ -82,15 +87,15 @@ module.exports = {
 
 
 	// update an existing user
-	update: function (options, callback){
+	update: function(options, callback) {
 		var self = this;
 
-		Database.connect(dbOptions, function(err, db){
-			if(err || !db){
+		Database.connect(dbOptions, function(err, db) {
+			if (err || !db) {
 				callback(err, null);
-			}else{
-				self.get(options, function(err, doc){
-					if(doc){
+			} else {
+				self.get(options, function(err, doc) {
+					if (doc) {
 
 						// explicit property update
 						doc.username = options.username;
@@ -102,20 +107,22 @@ module.exports = {
 						doc.modified = new Date();
 
 						// hash the password so its unreadable
-						Bcrypt.hash(options.item.password, null, null, function (err, hash) {
+						Bcrypt.hash(options.item.password, null, null, function(err, hash) {
 							doc.password = hash;
 
 							// save changes
-							db.collection('users').update( {'username': options.username}, doc, function(err, count){
-								if(!count || count === 0){
+							db.collection('users').update({
+								'username': options.username
+							}, doc, function(err, count) {
+								if (!count || count === 0) {
 									callback(Boom.notFound('user not found', err), null);
-								}else{
+								} else {
 									self.get(options, callback);
 								}
 							});
 						});
 
-					}else{
+					} else {
 						callback(Boom.notFound('user not found'), null);
 					}
 				});
@@ -126,15 +133,17 @@ module.exports = {
 
 
 	// get a single user
-	get: function(options, callback){
-		Database.connect(dbOptions, function(err, db){
-			if(err || !db){
+	get: function(options, callback) {
+		Database.connect(dbOptions, function(err, db) {
+			if (err || !db) {
 				callback(Boom.badImplementation('Failed to connect to db', err), null);
-			}else{
-				db.collection('users').findOne( {'username': options.username}, function(err, doc){
-					if(doc){
+			} else {
+				db.collection('users').findOne({
+					'username': options.username
+				}, function(err, doc) {
+					if (doc) {
 						callback(null, doc);
-					}else{
+					} else {
 						callback(Boom.notFound('user not found'), null);
 					}
 				});
@@ -145,7 +154,7 @@ module.exports = {
 
 
 	// find a list of user that match a query
-	find: function(options, callback){
+	find: function(options, callback) {
 		var cursor,
 			defaults,
 			skipFrom,
@@ -154,29 +163,33 @@ module.exports = {
 		defaults = {
 			page: 1,
 			pageSize: 10,
-			sort: {modified:-1},
+			sort: {
+				modified: -1
+			},
 			query: {}
-		}
+		};
 
 		options = Hoek.applyToDefaults(defaults, options);
 		skipFrom = (options.page * options.pageSize) - options.pageSize;
 
-		Database.connect(dbOptions, function(err, db){
+		Database.connect(dbOptions, function(err, db) {
 			// create and fire query
 			cursor = db.collection('users').find(options.query)
-			    .skip(skipFrom)
+				.skip(skipFrom)
 				.limit(options.pageSize)
-				.sort(options.sort)
+				.sort(options.sort);
 
 			// process results
-		  	cursor.toArray(function(err, docs) {
-		    	if (err) {
-		      		callback({'error': err});
-		    	} else {
+			cursor.toArray(function(err, docs) {
+				if (err) {
+					callback({
+						'error': err
+					});
+				} else {
 					cursor.count(function(err, count) {
 						if (err) {
 							callback(err, null);
-						}else{
+						} else {
 							callback(null, {
 								'items': docs,
 								'count': count,
@@ -186,23 +199,27 @@ module.exports = {
 							});
 						}
 					});
-		    	}
-		  	});
-	  	});
+				}
+			});
+		});
 	},
 
 
 	// remove user from collection using id
-	remove: function(options, callback){
+	remove: function(options, callback) {
 		var self = this;
-		Database.connect(dbOptions, function(err, db){
-			db.collection('users').findAndRemove({'username': options.username}, function(err, doc) {
-				if(!doc){
+		Database.connect(dbOptions, function(err, db) {
+			db.collection('users').findAndRemove({
+				'username': options.username
+			}, function(err, doc) {
+				if (!doc) {
 					callback(Boom.notFound('user not found', err), null);
-				}else{
+				} else {
 					// remove token for this user
-					Tokens.remove({owner : options.username}, function(){})
-					callback(err, doc);	
+					Tokens.remove({
+						owner: options.username
+					}, function() {});
+					callback(err, doc);
 				}
 			});
 		});
@@ -211,8 +228,8 @@ module.exports = {
 
 
 	// remove all user from collection
-	removeAll: function(callback){
-		Database.connect(dbOptions, function(err, db){
+	removeAll: function(callback) {
+		Database.connect(dbOptions, function(err, db) {
 			db.collection('users').remove({}, function(err, count) {
 				callback(err, count);
 			});
@@ -222,5 +239,3 @@ module.exports = {
 
 
 };
-
-
