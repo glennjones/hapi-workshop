@@ -13,6 +13,7 @@ This is a simple example of using [HTTP basic authentication](http://en.wikipedi
 The username is `jane` and the password is `password`. If you wish to reset the basic authentication you can use the URL `http://log:out@localhost:8000`. 
 
 ## Code
+```js
 	var Hapi    = require('hapi'),
 	    Bcrypt  = require('bcrypt-nodejs');
 
@@ -71,6 +72,7 @@ The username is `jane` and the password is `password`. If you wish to reset the 
 	});
 
 	server.start();
-    
+```
+
 ## Notes
 The `bcrypt-nodejs` module (pure javascript version) was used in the example as its easier to install windows, but you may want to use `bcrypt` in production.
