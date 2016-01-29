@@ -19,6 +19,8 @@ To access the content with basic authentication use the URL http://localhost:800
 
 
 ## Code
+
+```js
 var Hapi    = require('hapi'),
     Bcrypt  = require('bcrypt-nodejs');
 
@@ -128,6 +130,7 @@ server.route([{
     }]);
 
 server.start();
+```
 
 
 
