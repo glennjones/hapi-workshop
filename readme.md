@@ -7,7 +7,7 @@ This project contains the material created for [Async Special - Hapi.js Workshop
 
 ## Code
 ### API 
-This is a example bookmark API built with hapi. I am still updating and adding to this example.
+This is an example bookmark API built with hapi. I am still updating and adding to this example.
 * [bookmarks-api (full)](code/bookmarks-api)
 
 There are also the staged builds from the workshop:
@@ -28,24 +28,24 @@ There are 4 simple examples of the use of different authentication strategies.
 
 
 ### Datebase connections examples
-During the workshop a number of people ask about patterns of database connection for [hapi](http://hapijs.com/). So I have created two examples projects to show approaches. The shared-connection is my favoured approch, but maybe built using promises.
+During the workshop a number of people asked about patterns of database connection for [hapi](http://hapijs.com/). So I have created two example projects to show approaches. The shared-connection is my favoured approch, but may be built using promises.
 
 * [shared database connection, built as singleton](code/database/shared-connection)
 * [use of hapi-mongodb to share a database connection](code/database/hapi-mongodb)
 
 
 ### Logging examples
-During the workshop I showed logging of requests information using uses the [good](https://github.com/hapijs/good) and [good-console](https://github.com/hapijs/good-console) plug-ins.  I have created simple examples of how to add these plug-ins to your project.
+During the workshop I showed logging of requests information using the [good](https://github.com/hapijs/good) and [good-console](https://github.com/hapijs/good-console) plug-ins.  I have created simple examples of how to add these plug-ins to your project.
 
 * [console logging](code/logging/good)
 
 
 ## Prerequisites for running code
-I wrote a [prerequisites document](https://rawgit.com/glennjones/hapi-workshop/master/docs/prerequisites.html) on the software need to run the code and some tools that would help you build and debug the projects. If you wish to run these examples please read this first.
+I wrote a [prerequisites document](https://rawgit.com/glennjones/hapi-workshop/master/docs/prerequisites.html) on the software needed to run the code and some tools that would help you build and debug the projects. If you wish to run these examples please read this first.
 
 
 ## Workshop notes
-I started writing some workshop notes, but did not finnsh them in time for the workshop. I have kept them in the project for reference. If your looking for good tutorials try (hapi site)[http://hapijs.com/tutorials], rather than these notes.
+I started writing some workshop notes, but did not finnsh them in time for the workshop. I have kept them in the project for reference. If you're looking for good tutorials try (hapi site)[http://hapijs.com/tutorials], rather than these notes.
 
 1. [Setup Node.js server with HAPI.js](https://rawgit.com/glennjones/hapi-workshop/master/notes/section1/instructions.html)
 2. [Serving static files and templates](https://rawgit.com/glennjones/hapi-workshop/master/notes/section2/instructions.html)
@@ -56,14 +56,14 @@ Expand on these subjects:
 * ~~Share-code or singleton pattern in modules~~
 * ~~Middleware and [hapi](http://hapijs.com/)~~
 * ~~Export vs module.exports~~
-* The importants of HTTPS
+* The importance of HTTPS
 * Deploying app
 
 Build examples of:
 * ~~Update to v0.8.x of hapi~~
 * ~~Share-code or singleton pattern in modules~~
-* ~~Shared schema's across application layers~~
-* ~~Using server.ext events for middleware like functionally~~
+* ~~Shared schemas across application layers~~
+* ~~Using server.ext events for middleware-like functionality~~
 * Locking endpoints and routes to HTTPS or HTTP
 * Update whole project with promises
 
